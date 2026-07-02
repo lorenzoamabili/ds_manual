@@ -976,6 +976,529 @@ print(f"True conversion rate:  {df[df['category']=='cat_0']['y'].mean():.4f}")
 
 
 # =============================================================================
+# 06 · Time-series forecasting
+# =============================================================================
+def nb_timeseries():
+    return nb([
+        md("""# Time-Series Forecasting
+
+Rolling-origin backtesting, decomposition, and forecast evaluation.
+Key rule: **never use a standard train/test split for time series** — it leaks
+future information into training.
+"""),
+        md("## Setup"), code(SETUP),
+
+        md("""## 1. Decomposition — trend, seasonality, noise
+
+Before modelling, decompose the series to understand its components.
+Additive decomposition: `y = trend + seasonality + residual`.
+"""),
+        code("""\
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+rng = np.random.default_rng(42)
+t   = np.arange(144)
+
+# Synthetic series: trend + monthly seasonality + noise
+trend      = 100 + 0.8*t
+seasonality = 20 * np.sin(2*np.pi*t/12)
+noise       = rng.normal(0, 5, 144)
+y           = trend + seasonality + noise
+dates       = pd.date_range("2012-01", periods=144, freq="MS")
+series      = pd.Series(y, index=dates)
+
+result = seasonal_decompose(series, model="additive", period=12)
+
+fig, axes = plt.subplots(4, 1, figsize=(13, 10), sharex=True)
+for ax, data, title, col in zip(axes,
+    [series, result.trend, result.seasonal, result.resid],
+    ["Original", "Trend", "Seasonal (period=12)", "Residual"],
+    [C[0], C[2], C[3], C[1]]
+):
+    ax.plot(data.index, data.values, color=col, lw=1.8)
+    ax.fill_between(data.index, data.values, alpha=0.15, color=col)
+    ax.set_ylabel(title, fontsize=10)
+    ax.grid(True, alpha=0.3)
+axes[0].set_title("Additive decomposition: trend + seasonality + residual", fontsize=12)
+plt.tight_layout()
+plt.show()
+print(f"Trend range: {result.trend.dropna().min():.0f} to {result.trend.dropna().max():.0f}")
+print(f"Seasonal amplitude: +/-{result.seasonal.max():.1f}")
+print(f"Residual std: {result.resid.dropna().std():.2f}  (noise level)")
+"""),
+
+        md("""## 2. Rolling-origin backtest
+
+Split data into an expanding training window, forecast horizon steps ahead,
+collect errors. This mirrors real deployment: you always forecast into the future.
+"""),
+        code("""\
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
+from statsmodels.tsa.arima.model import ARIMA
+
+def seasonal_naive(train, h, period=12):
+    last_season = train.values[-period:]
+    reps = (h // period) + 1
+    return pd.Series(
+        np.tile(last_season, reps)[:h],
+        index=pd.date_range(train.index[-1], periods=h+1, freq="MS")[1:]
+    )
+
+def mape(actual, forecast):
+    return np.mean(np.abs((actual - forecast) / actual)) * 100
+
+# Rolling-origin evaluation
+origin_step = 6
+h           = 6
+origins     = range(72, len(series) - h, origin_step)
+results     = {"Seasonal Naive": [], "ETS": [], "ARIMA(1,1,1)x12": []}
+
+for origin in origins:
+    train  = series.iloc[:origin]
+    actual = series.iloc[origin:origin+h]
+
+    # Naive
+    fc_naive = seasonal_naive(train, h)
+    results["Seasonal Naive"].append(mape(actual.values, fc_naive.values))
+
+    # ETS
+    try:
+        fc_ets = ExponentialSmoothing(train, trend="add", seasonal="add",
+                                       seasonal_periods=12).fit(optimized=True).forecast(h)
+        results["ETS"].append(mape(actual.values, fc_ets.values))
+    except Exception:
+        results["ETS"].append(np.nan)
+
+    # ARIMA
+    try:
+        fc_arima = ARIMA(train, order=(1,1,1), seasonal_order=(1,1,1,12)).fit().forecast(h)
+        results["ARIMA(1,1,1)x12"].append(mape(actual.values, fc_arima.values))
+    except Exception:
+        results["ARIMA(1,1,1)x12"].append(np.nan)
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+# Boxplot of MAPE distributions
+ax = axes[0]
+data_box = [np.array(v)[~np.isnan(v)] for v in results.values()]
+bp = ax.boxplot(data_box, labels=list(results.keys()), patch_artist=True,
+                medianprops=dict(color="white", lw=2))
+for patch, col in zip(bp["boxes"], C):
+    patch.set_facecolor(col)
+    patch.set_alpha(0.75)
+ax.set(ylabel="MAPE (%)", title="Rolling-origin backtest\nMAPE distribution by model")
+
+# Mean MAPE per origin
+ax = axes[1]
+origin_idx = list(range(len(list(results.values())[0])))
+for (name, vals), col in zip(results.items(), C):
+    clean = np.array(vals, dtype=float)
+    ax.plot(origin_idx, clean, "o-", color=col, alpha=0.8, ms=4, label=name)
+ax.set(xlabel="Backtest origin index", ylabel="MAPE (%)",
+       title="MAPE across rolling origins\n(lower = better, stability matters too)")
+ax.legend()
+
+plt.tight_layout()
+plt.show()
+for name, vals in results.items():
+    clean = [v for v in vals if not np.isnan(v)]
+    print(f"{name:<22}  mean MAPE = {np.mean(clean):.1f}%  (n={len(clean)} origins)")
+"""),
+
+        md("""## 3. Forecast uncertainty — prediction intervals
+
+A point forecast without intervals is incomplete. Prediction intervals
+quantify how much the forecast could plausibly be wrong.
+"""),
+        code("""\
+from statsmodels.tsa.holtwinters import ExponentialSmoothing
+
+train = series.iloc[:120]
+test  = series.iloc[120:]
+h     = len(test)
+
+fit = ExponentialSmoothing(train, trend="add", seasonal="add",
+                            seasonal_periods=12).fit(optimized=True)
+fc  = fit.forecast(h)
+
+# Bootstrap prediction intervals
+n_boot = 500
+boot_forecasts = np.zeros((n_boot, h))
+resid = fit.resid.values
+for b in range(n_boot):
+    boot_resid = np.random.choice(resid, size=len(train), replace=True)
+    boot_series = pd.Series(train.values + boot_resid, index=train.index)
+    try:
+        boot_fit = ExponentialSmoothing(boot_series, trend="add", seasonal="add",
+                                         seasonal_periods=12).fit(optimized=True)
+        boot_forecasts[b] = boot_fit.forecast(h).values
+    except Exception:
+        boot_forecasts[b] = fc.values
+
+pi_80_lo = np.percentile(boot_forecasts, 10, axis=0)
+pi_80_hi = np.percentile(boot_forecasts, 90, axis=0)
+pi_95_lo = np.percentile(boot_forecasts, 2.5, axis=0)
+pi_95_hi = np.percentile(boot_forecasts, 97.5, axis=0)
+
+fig, ax = plt.subplots(figsize=(13, 5))
+ax.plot(train.index[-36:], train.values[-36:], color=C[0], lw=2, label="Training (last 3 yrs)")
+ax.plot(test.index, test.values, color="black", lw=2, label="Actual")
+ax.plot(fc.index,   fc.values,   color=C[1], lw=2, linestyle="--", label="ETS forecast")
+ax.fill_between(fc.index, pi_80_lo, pi_80_hi, color=C[1], alpha=0.25, label="80% PI")
+ax.fill_between(fc.index, pi_95_lo, pi_95_hi, color=C[1], alpha=0.12, label="95% PI")
+ax.axvline(test.index[0], color="grey", lw=1.5, linestyle=":", label="Forecast origin")
+ax.set(xlabel="Date", ylabel="Passengers",
+       title="ETS forecast with bootstrap prediction intervals\n(wider = more uncertain)")
+ax.legend(fontsize=9)
+ax.yaxis.set_major_formatter(mpl.ticker.FuncFormatter(lambda x,_: f"{int(x):,}"))
+plt.tight_layout()
+plt.show()
+
+coverage_80 = np.mean((test.values >= pi_80_lo) & (test.values <= pi_80_hi))
+coverage_95 = np.mean((test.values >= pi_95_lo) & (test.values <= pi_95_hi))
+print(f"80% PI coverage: {coverage_80:.0%}  (should be ~80%)")
+print(f"95% PI coverage: {coverage_95:.0%}  (should be ~95%)")
+print(f"Forecast MAPE:   {mape(test.values, fc.values):.1f}%")
+"""),
+    ])
+
+
+# =============================================================================
+# 07 · Clustering & dimensionality reduction
+# =============================================================================
+def nb_clustering():
+    return nb([
+        md("""# Clustering & Dimensionality Reduction
+
+Unsupervised learning: finding structure without labels.
+Key challenge: evaluating quality without ground truth.
+"""),
+        md("## Setup"), code(SETUP),
+
+        md("""## 1. KMeans — choosing k with the silhouette score
+
+The elbow method is subjective. The silhouette score is objective:
+measures how similar each point is to its own cluster vs. the nearest other cluster.
+Range: -1 (wrong cluster) to +1 (tight, well-separated cluster).
+"""),
+        code("""\
+from sklearn.datasets import make_blobs
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import silhouette_score, silhouette_samples
+
+rng = np.random.default_rng(42)
+X_raw, y_true = make_blobs(n_samples=600, centers=4, cluster_std=1.1,
+                            random_state=42)
+X = StandardScaler().fit_transform(X_raw)
+
+# Sweep k
+k_range = range(2, 10)
+inertias, sil_scores = [], []
+for k in k_range:
+    km = KMeans(k, random_state=42, n_init=10).fit(X)
+    inertias.append(km.inertia_)
+    sil_scores.append(silhouette_score(X, km.labels_))
+
+best_k = k_range[np.argmax(sil_scores)]
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+# Elbow plot
+ax = axes[0]
+ax.plot(list(k_range), inertias, "o-", color=C[0], lw=2)
+ax.set(xlabel="k", ylabel="Inertia (within-cluster SS)",
+       title="Elbow plot\n(elbow is subjective - hard to read)")
+
+# Silhouette plot
+ax = axes[1]
+ax.plot(list(k_range), sil_scores, "o-", color=C[2], lw=2)
+ax.axvline(best_k, color=C[1], lw=2, linestyle="--", label=f"Best k={best_k}")
+ax.set(xlabel="k", ylabel="Silhouette score",
+       title="Silhouette score vs k\n(peak = optimal k, objective)")
+ax.legend()
+
+# Cluster scatter at best k
+ax = axes[2]
+km_best = KMeans(best_k, random_state=42, n_init=10).fit(X)
+for c in range(best_k):
+    mask = km_best.labels_ == c
+    ax.scatter(X[mask,0], X[mask,1], s=20, alpha=0.7, color=C[c], label=f"Cluster {c}")
+centers = km_best.cluster_centers_
+ax.scatter(centers[:,0], centers[:,1], marker="X", s=180, color="black", zorder=5, label="Centroids")
+ax.set(xlabel="PC1", ylabel="PC2", title=f"KMeans k={best_k}\n(silhouette={sil_scores[best_k-2]:.3f})")
+ax.legend(fontsize=8, markerscale=1.5)
+
+plt.tight_layout()
+plt.show()
+print(f"Best k by silhouette: {best_k}  (true k=4)")
+print(f"Best silhouette:      {max(sil_scores):.3f}")
+"""),
+
+        md("""## 2. PCA — variance explained and biplots
+
+PCA finds the directions of maximum variance. The scree plot shows
+how many components capture "most" of the variance.
+"""),
+        code("""\
+from sklearn.decomposition import PCA
+from sklearn.datasets import load_wine
+from sklearn.preprocessing import StandardScaler
+
+X_wine, y_wine = load_wine(return_X_y=True)
+feature_names   = load_wine().feature_names
+X_sc            = StandardScaler().fit_transform(X_wine)
+pca             = PCA().fit(X_sc)
+X_pca           = pca.transform(X_sc)
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+# Scree plot
+ax = axes[0]
+cumvar = np.cumsum(pca.explained_variance_ratio_) * 100
+n_comp = np.argmax(cumvar >= 80) + 1
+ax.bar(range(1, len(cumvar)+1), pca.explained_variance_ratio_*100,
+       color=C[0], alpha=0.8, label="Individual")
+ax.plot(range(1, len(cumvar)+1), cumvar, "o-", color=C[1], lw=2, label="Cumulative")
+ax.axhline(80, color="grey", lw=1.5, linestyle="--", label="80% threshold")
+ax.axvline(n_comp, color=C[2], lw=2, linestyle="--")
+ax.set(xlabel="Principal component", ylabel="Variance explained (%)",
+       title=f"Scree plot\n({n_comp} PCs explain 80% of variance)")
+ax.legend(fontsize=9)
+
+# Scatter PC1 vs PC2
+ax = axes[1]
+wine_classes = load_wine().target_names
+for cls, col in zip([0,1,2], C):
+    mask = y_wine == cls
+    ax.scatter(X_pca[mask,0], X_pca[mask,1], s=30, alpha=0.8, color=col,
+               label=wine_classes[cls])
+ax.set(xlabel=f"PC1 ({pca.explained_variance_ratio_[0]*100:.1f}%)",
+       ylabel=f"PC2 ({pca.explained_variance_ratio_[1]*100:.1f}%)",
+       title="PC1 vs PC2\n(wine varieties well-separated)")
+ax.legend()
+
+# Biplot (loadings)
+ax = axes[2]
+loadings = pca.components_[:2].T
+scale    = 3
+ax.scatter(X_pca[:,0], X_pca[:,1], s=10, alpha=0.2, color="grey")
+for i, (lx, ly) in enumerate(loadings):
+    ax.annotate("", xy=(lx*scale, ly*scale), xytext=(0,0),
+                arrowprops=dict(arrowstyle="->", color=C[1], lw=1.5))
+    ax.text(lx*scale*1.1, ly*scale*1.1, feature_names[i],
+            fontsize=7, ha="center", color=C[1])
+ax.set(xlabel="PC1", ylabel="PC2",
+       title="Biplot: feature loadings\n(arrow direction = feature contribution)")
+ax.axhline(0, color="grey", lw=0.5); ax.axvline(0, color="grey", lw=0.5)
+plt.tight_layout()
+plt.show()
+print(f"Top 2 features driving PC1: {[feature_names[i] for i in np.argsort(np.abs(pca.components_[0]))[-2:][::-1]]}")
+"""),
+
+        md("""## 3. DBSCAN — density-based clustering (handles noise)
+
+KMeans requires specifying k and assumes spherical clusters.
+DBSCAN discovers arbitrary-shaped clusters and labels outliers as noise.
+"""),
+        code("""\
+from sklearn.cluster import DBSCAN, KMeans
+from sklearn.datasets import make_moons, make_circles
+from sklearn.metrics import silhouette_score
+
+datasets = [
+    ("Two moons",   *make_moons(500,  noise=0.08, random_state=42)),
+    ("Two circles", *make_circles(500, noise=0.05, factor=0.5, random_state=42)),
+]
+
+fig, axes = plt.subplots(2, 3, figsize=(14, 8))
+for row, (name, X_d, y_d) in enumerate(datasets):
+    # True labels
+    for cls in np.unique(y_d):
+        axes[row,0].scatter(X_d[y_d==cls,0], X_d[y_d==cls,1], s=12, alpha=0.7, color=C[cls])
+    axes[row,0].set(title=f"{name}\nGround truth", xticks=[], yticks=[])
+
+    # KMeans
+    km_labels = KMeans(2, random_state=42, n_init=10).fit_predict(X_d)
+    for cls in np.unique(km_labels):
+        axes[row,1].scatter(X_d[km_labels==cls,0], X_d[km_labels==cls,1],
+                            s=12, alpha=0.7, color=C[cls])
+    sil_km = silhouette_score(X_d, km_labels)
+    axes[row,1].set(title=f"KMeans k=2\nsil={sil_km:.3f} (fails on non-convex)", xticks=[], yticks=[])
+
+    # DBSCAN
+    db = DBSCAN(eps=0.15, min_samples=5).fit(X_d)
+    db_labels = db.labels_
+    noise_mask = db_labels == -1
+    for cls in np.unique(db_labels[~noise_mask]):
+        axes[row,2].scatter(X_d[db_labels==cls,0], X_d[db_labels==cls,1],
+                            s=12, alpha=0.7, color=C[cls])
+    axes[row,2].scatter(X_d[noise_mask,0], X_d[noise_mask,1],
+                        s=12, alpha=0.5, color="grey", marker="x", label="Noise")
+    n_clusters = len(set(db_labels)) - (1 if -1 in db_labels else 0)
+    n_noise    = noise_mask.sum()
+    axes[row,2].set(title=f"DBSCAN\n{n_clusters} clusters, {n_noise} noise pts", xticks=[], yticks=[])
+
+cols = ["Ground truth", "KMeans k=2", "DBSCAN"]
+for ax, col in zip(axes[0], cols):
+    ax.set_title(f"{col}\n{ax.get_title().split(chr(10))[-1]}", fontsize=10)
+
+fig.suptitle("KMeans fails on non-convex clusters; DBSCAN handles them", fontsize=12)
+plt.tight_layout()
+plt.show()
+"""),
+    ])
+
+
+# =============================================================================
+# 08 · Survival analysis
+# =============================================================================
+def nb_survival():
+    return nb([
+        md("""# Survival Analysis
+
+Time-to-event modelling with censoring. Used for churn, medical outcomes,
+equipment failure. Key insight: **censored observations are not missing data**
+— they carry information ("survived at least this long").
+"""),
+        md("## Setup"), code(SETUP + "\nfrom lifelines import KaplanMeierFitter, CoxPHFitter\nfrom lifelines.statistics import logrank_test"),
+
+        md("""## 1. Kaplan-Meier curves
+
+Non-parametric survival function estimator. Handles censoring correctly.
+Compare curves between groups with the log-rank test.
+"""),
+        code("""\
+rng = np.random.default_rng(42)
+n   = 600
+
+# Simulate customer churn data
+monthly_plan = rng.binomial(1, 0.55, n).astype(bool)
+base_rate    = np.where(monthly_plan, 0.08, 0.03)   # monthly churn hazard
+tenure       = np.zeros(n)
+event        = np.zeros(n, dtype=bool)
+
+for i in range(n):
+    for month in range(1, 37):
+        if rng.random() < base_rate[i]:
+            tenure[i] = month
+            event[i]  = True
+            break
+    if not event[i]:
+        tenure[i] = 36   # censored at study end
+
+df = pd.DataFrame({
+    "tenure": tenure, "event": event,
+    "plan":   np.where(monthly_plan, "Monthly", "Annual"),
+    "charges": rng.lognormal(5, 0.4, n),
+})
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+# KM curves by plan type
+ax = axes[0]
+colors_plan = {"Monthly": C[1], "Annual": C[2]}
+kmf = KaplanMeierFitter()
+for plan, col in colors_plan.items():
+    mask = df["plan"] == plan
+    kmf.fit(df.loc[mask, "tenure"], df.loc[mask, "event"], label=plan)
+    kmf.plot_survival_function(ax=ax, color=col, ci_show=True, ci_alpha=0.15)
+
+# Log-rank test
+m_mask = df["plan"] == "Monthly"
+lr = logrank_test(df.loc[m_mask, "tenure"],  df.loc[~m_mask, "tenure"],
+                  df.loc[m_mask, "event"],   df.loc[~m_mask, "event"])
+ax.set(xlabel="Months", ylabel="Survival probability",
+       title=f"Kaplan-Meier curves by plan type\nLog-rank p={lr.p_value:.4f}")
+ax.legend(title="Plan type")
+
+# At-risk table proxy (survival at key months)
+ax = axes[1]
+months = [6, 12, 18, 24, 30, 36]
+for plan, col in colors_plan.items():
+    mask = df["plan"] == plan
+    kmf.fit(df.loc[mask, "tenure"], df.loc[mask, "event"])
+    surv_at_months = [kmf.predict(m) for m in months]
+    ax.plot(months, surv_at_months, "o-", color=col, lw=2, label=plan)
+    for m, s in zip(months, surv_at_months):
+        ax.annotate(f"{s:.0%}", xy=(m, s), xytext=(0, 8),
+                    textcoords="offset points", ha="center", fontsize=8, color=col)
+
+ax.set(xlabel="Month", ylabel="Survival probability",
+       title="Survival probability at key months\n(Annual plan retains much better)")
+ax.legend(title="Plan type")
+ax.yaxis.set_major_formatter(mpl.ticker.PercentFormatter(1.0))
+plt.tight_layout()
+plt.show()
+print(f"Log-rank test p-value: {lr.p_value:.6f}")
+print(f"Monthly 12-month survival:  {kmf.predict(12):.1%}")
+"""),
+
+        md("""## 2. Cox Proportional Hazards — covariate effects
+
+Semi-parametric model: estimates **hazard ratios** (HR) for each covariate.
+HR > 1 = increases hazard (faster churn); HR < 1 = protective.
+"""),
+        code("""\
+from lifelines import CoxPHFitter
+
+df_cox = df.copy()
+df_cox["monthly_plan"] = (df_cox["plan"] == "Monthly").astype(int)
+df_cox = df_cox.drop(columns=["plan"])
+
+cph = CoxPHFitter()
+cph.fit(df_cox, duration_col="tenure", event_col="event")
+
+fig, axes = plt.subplots(1, 2, figsize=(13, 5))
+
+# Coefficient forest plot
+ax = axes[0]
+summary = cph.summary
+coefs   = summary["coef"]
+se      = summary["se(coef)"]
+hr      = np.exp(coefs)
+hr_lo   = np.exp(coefs - 1.96*se)
+hr_hi   = np.exp(coefs + 1.96*se)
+
+y_pos = range(len(coefs))
+ax.errorbar(hr, y_pos, xerr=[hr-hr_lo, hr_hi-hr], fmt="o",
+            color=C[0], ms=8, capsize=5, lw=2)
+ax.axvline(1.0, color="grey", lw=1.5, linestyle="--", label="HR=1 (no effect)")
+ax.set(yticks=list(y_pos), yticklabels=coefs.index,
+       xlabel="Hazard Ratio (95% CI)",
+       title="Cox PH: Hazard Ratios\n(HR>1 = faster churn, HR<1 = slower)")
+ax.legend()
+for i, (h, lo, hi, name) in enumerate(zip(hr, hr_lo, hr_hi, coefs.index)):
+    color = C[1] if h > 1 else C[2]
+    ax.scatter(h, i, color=color, s=80, zorder=5)
+
+# Predicted survival for representative customers
+ax = axes[1]
+profiles = pd.DataFrame({
+    "monthly_plan": [1, 0, 1, 0],
+    "charges":      [df["charges"].quantile(0.25)] * 2 + [df["charges"].quantile(0.75)] * 2,
+})
+labels = ["Monthly, low charges", "Annual, low charges",
+          "Monthly, high charges", "Annual, high charges"]
+colors_prof = [C[1], C[2], C[3], C[0]]
+for profile, label, col in zip(profiles.itertuples(index=False), labels, colors_prof):
+    row = pd.DataFrame([profile._asdict()])
+    sf  = cph.predict_survival_function(row, times=range(1, 37))
+    ax.plot(sf.index, sf.values.flatten(), color=col, lw=2, label=label)
+
+ax.set(xlabel="Months", ylabel="Survival probability",
+       title="Predicted survival by customer profile\n(Cox PH)")
+ax.legend(fontsize=8)
+ax.yaxis.set_major_formatter(mpl.ticker.PercentFormatter(1.0))
+plt.tight_layout()
+plt.show()
+print("\nHazard ratios (exponentiated coefficients):")
+print(np.exp(cph.params_).round(3))
+"""),
+    ])
+
+
+# =============================================================================
 # Main
 # =============================================================================
 if __name__ == "__main__":
@@ -985,4 +1508,7 @@ if __name__ == "__main__":
     save("03-ab-testing.ipynb",              nb_ab())
     save("04-nlp-text-classification.ipynb", nb_nlp())
     save("05-feature-engineering.ipynb",     nb_features())
+    save("06-time-series-forecasting.ipynb", nb_timeseries())
+    save("07-clustering.ipynb",              nb_clustering())
+    save("08-survival-analysis.ipynb",       nb_survival())
     print("Done.")

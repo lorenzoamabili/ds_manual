@@ -2,7 +2,7 @@
 
 A structured, opinionated reference for how data science is actually practised — methods, models, best practices, pitfalls — backed by **runnable, verified Python on real open data**.
 
-[![Launch on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/HEAD?urlpath=lab)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/lorenzoamabili/ds_manual/blob/main/notebooks/01-statistics-fundamentals.ipynb)
 
 → Start with the **[Map of Data Science](00-map-of-data-science.md)** for an overview of how functions and domains connect.
 

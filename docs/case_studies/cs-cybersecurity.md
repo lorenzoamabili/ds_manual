@@ -1,10 +1,10 @@
 # Cybersecurity Case Studies
 
-## Darktrace — unsupervised [anomaly detection](13-anomaly-detection.md) for enterprise threats
+## Darktrace — unsupervised [anomaly detection](../13-anomaly-detection.md) for enterprise threats
 
 **Problem:** Signature-based security (antivirus, IDS rules) detects known threats. Novel threats — zero-days, insider threats, living-off-the-land attacks using legitimate tools — have no signature. Darktrace's core claim: detect threats from *behavioural deviation*, not signatures.
 
-**Approach:** **[Bayesian](20-bayesian-and-probabilistic.md), unsupervised anomaly detection** on network traffic logs. For each device and user, a baseline of "normal" behaviour is built: typical connection patterns, volume, port usage, timing, peer relationships. An anomaly score measures how surprising the current behaviour is relative to the personalised baseline.
+**Approach:** **[Bayesian](../20-bayesian-and-probabilistic.md), unsupervised anomaly detection** on network traffic logs. For each device and user, a baseline of "normal" behaviour is built: typical connection patterns, volume, port usage, timing, peer relationships. An anomaly score measures how surprising the current behaviour is relative to the personalised baseline.
 
 **Key technical decisions:**
 - **Per-entity baselines** (not population baselines): the fact that an executive's laptop connects to an unusual IP at 3am is anomalous *for that device* even if 3am connections are common across the fleet. Personalised baselines eliminate the base rate problem that afflicts population-level anomaly detection. See [doc 13](../13-anomaly-detection.md).
@@ -21,7 +21,7 @@
 
 **Problem:** Cloudflare processes ~55 million HTTP requests per second. A significant fraction are bots — some benign (search crawlers), some malicious (credential stuffing, scraping, DDoS). Blocking legitimate users by mistake (false positive) is immediately visible; allowing bad bots through harms Cloudflare's customers.
 
-**Approach:** A **real-time ML scoring pipeline** at the CDN edge. Features are computed from the HTTP request itself (headers, TLS fingerprint, timing, JavaScript challenge result) and from device/IP reputation history. A [gradient boosting](05-supervised-learning.md) model scores each request in <5ms.
+**Approach:** A **real-time ML scoring pipeline** at the CDN edge. Features are computed from the HTTP request itself (headers, TLS fingerprint, timing, JavaScript challenge result) and from device/IP reputation history. A [gradient boosting](../05-supervised-learning.md) model scores each request in <5ms.
 
 **Key technical decisions:**
 - **TLS and HTTP/2 fingerprinting** (JA3, HTTP/2 fingerprint): legitimate browsers have characteristic patterns in their TLS handshake and HTTP/2 settings that are hard to fake. Bots using automation frameworks (Selenium, Puppeteer) have distinct fingerprints even when they try to mimic browsers.

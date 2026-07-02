@@ -4,7 +4,7 @@
 
 **Problem:** Diabetic retinopathy (DR) is the leading cause of preventable blindness globally. A trained ophthalmologist can diagnose it from a retinal fundus photograph. But there are not enough ophthalmologists in rural India, Thailand, and Sub-Saharan Africa — where diabetic patients have the fewest access points for screening.
 
-**Approach:** Google trained a deep [CNN](11-computer-vision.md) (InceptionV3 [fine-tuned](11-computer-vision.md)) on 128,000 retinal images graded by a panel of US board-certified ophthalmologists. The model classifies severity into five grades and was validated on independent datasets from India and the US.
+**Approach:** Google trained a deep [CNN](../11-computer-vision.md) (InceptionV3 [fine-tuned](../11-computer-vision.md)) on 128,000 retinal images graded by a panel of US board-certified ophthalmologists. The model classifies severity into five grades and was validated on independent datasets from India and the US.
 
 **Key technical decisions:**
 - **Label aggregation**: each image was graded by 3-7 ophthalmologists. Disagreement was resolved by majority vote, but importantly the *distribution* of grades (not just the majority) was used to define uncertainty. Images with high inter-rater disagreement were flagged for model uncertainty, not forced into a single label.
@@ -21,14 +21,14 @@
 
 **Problem:** The NHS (and US CMS) penalise hospitals for 30-day readmissions above a risk-adjusted baseline. The clinical goal: identify high-risk patients at discharge and provide targeted follow-up care (phone calls, care coordinators, GP handover).
 
-**Approach:** A [gradient boosting](05-supervised-learning.md) classifier trained on EHR data: admission diagnoses (ICD codes), comorbidities, lab values at discharge, length of stay, prior admission history, social deprivation index, discharge destination.
+**Approach:** A [gradient boosting](../05-supervised-learning.md) classifier trained on EHR data: admission diagnoses (ICD codes), comorbidities, lab values at discharge, length of stay, prior admission history, social deprivation index, discharge destination.
 
 **Key technical decisions:**
-- **LACE index as baseline**: before any ML, the LACE index (Length of stay, Acuity of admission, Comorbidity, Emergency department visits) is a well-validated clinical score. Any ML model must beat LACE on both discrimination (AUC) and [calibration](04-evaluation-and-validation.md) to justify the added complexity. See [doc 04](../04-evaluation-and-validation.md).
+- **LACE index as baseline**: before any ML, the LACE index (Length of stay, Acuity of admission, Comorbidity, Emergency department visits) is a well-validated clinical score. Any ML model must beat LACE on both discrimination (AUC) and [calibration](../04-evaluation-and-validation.md) to justify the added complexity. See [doc 04](../04-evaluation-and-validation.md).
 - **Calibration is critical in clinical settings**: a nurse using the model to prioritise follow-up calls needs to know that a "70% readmission risk" means roughly 70 in 100 similar patients are readmitted — not a relative score. Miscalibrated models lead to incorrect resource allocation.
 - **Protected characteristic audit**: readmission rates differ by socioeconomic deprivation, ethnicity, and geography. The model should predict readmission, not deprivation — and the two are correlated. A fairness audit (see [doc 19](../19-responsible-ai-and-fairness.md)) is mandatory before deployment in NHS settings.
 
-**What failed first:** The first deployed model was evaluated on retrospective data from 2019-2020. COVID disrupted admission patterns, discharge pathways, and readmission rates so severely that the model's calibration collapsed in 2020-2021. The hospital had no monitoring pipeline and did not detect the [drift](14-mlops-and-productionization.md) for months.
+**What failed first:** The first deployed model was evaluated on retrospective data from 2019-2020. COVID disrupted admission patterns, discharge pathways, and readmission rates so severely that the model's calibration collapsed in 2020-2021. The hospital had no monitoring pipeline and did not detect the [drift](../14-mlops-and-productionization.md) for months.
 
 **Transferable lesson:** Clinical models *must* have real-time performance monitoring with drift detection. Patient populations, coding practices, and care pathways change — a model without monitoring is an untested model after its training cutoff. See [doc 14](../14-mlops-and-productionization.md).
 
@@ -38,7 +38,7 @@
 
 **Problem:** Sepsis kills ~250,000 people/year in the US. It is treatable if caught early. Epic Systems deployed an in-hospital sepsis early warning model (the "Deterioration Index", EDI) to hundreds of US hospitals, generating real-time alerts for at-risk patients.
 
-**Approach:** [Logistic regression](05-supervised-learning.md) on vital signs and lab values updated in real-time from the EHR. Alert fires when the patient's EDI score crosses a threshold.
+**Approach:** [Logistic regression](../05-supervised-learning.md) on vital signs and lab values updated in real-time from the EHR. Alert fires when the patient's EDI score crosses a threshold.
 
 **Key technical decisions (and their failures):**
 - **UCSF/Michigan independent validation** (published 2021): the EDI had AUC ≈ 0.74-0.76 on their patient populations — materially lower than Epic's reported 0.83 in the original validation. Difference attributed to population characteristics, implementation variation, and possible overfitting to Epic's training health system.
