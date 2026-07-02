@@ -1,81 +1,80 @@
 # Jupyter Notebooks
 
-All examples in this manual are available as runnable Jupyter notebooks.
-Clone the repo and run locally:
+Every example in this manual is available as a runnable Jupyter notebook.
+Launch the full environment in your browser — no installation required:
+
+[![Launch on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab)
+
+Or run locally:
 
 ```bash
 git clone https://github.com/lorenzoamabili/ds_manual
 cd ds_manual
 pip install -r requirements.txt jupyter
-make notebooks        # execute all notebooks top-to-bottom
-jupyter lab           # browse interactively
+jupyter lab
 ```
 
 ---
 
 ## Project notebooks
 
-Each project is a standalone end-to-end workflow with narrative markdown cells
-and executable code cells. Open in Jupyter Lab or VS Code.
+End-to-end workflows with narrative markdown and executable code cells.
+Each notebook mirrors the corresponding `.py` project script with added context.
 
-| Project | Topic | Notebook |
+| Project | Topic | Launch |
 |---|---|---|
-| P1 · Supervised Classification | Breast cancer, no-leakage Pipeline, calibration | `projects/p1_supervised_learning/notebook.ipynb` |
-| P2 · Time-Series Forecasting | Airline passengers, rolling-origin backtest | `projects/p2_time_series_forecasting/notebook.ipynb` |
-| P3 · Causal Inference | Doubly-robust ATE estimation, confounding | `projects/p3_causal_inference/notebook.ipynb` |
-| P4 · Unsupervised Learning | KMeans + PCA on wine, silhouette selection | `projects/p4_unsupervised_learning/notebook.ipynb` |
-| P5 · Survival Analysis | Cox PH on synthetic churn, censoring | `projects/p5_survival_analysis/notebook.ipynb` |
-| P6 · Fairness Audit | Credit scoring, disparate impact, threshold fix | `projects/p6_fairness_audit/notebook.ipynb` |
-| P7 · Anomaly Detection | Isolation Forest vs GBM, PR-AUC on fraud | `projects/p7_anomaly_detection/notebook.ipynb` |
-| P8 · Recommender System | MovieLens SVD, coverage vs RMSE | `projects/p8_recommender/notebook.ipynb` |
-| P9 · NLP Classification | TF-IDF + LinearSVC on 20 Newsgroups | `projects/p9_nlp_classification/notebook.ipynb` |
-| P10 · Optimisation | LP budget allocation, MILP knapsack, Hungarian staffing | `projects/p10_optimization/notebook.ipynb` |
-| P11 · Multi-Armed Bandits | Epsilon-greedy vs UCB1 vs Thompson sampling, LinUCB | `projects/p11_bandit/notebook.ipynb` |
-| P12 · RAG Pipeline | Chunking, TF-IDF retrieval, Recall@K, MRR evaluation | `projects/p12_rag/notebook.ipynb` |
+| P1 · Supervised Classification | No-leakage Pipeline, calibration, permutation importance | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p1_supervised_learning/notebook.ipynb) |
+| P2 · Time-Series Forecasting | Rolling-origin backtest, ETS vs naive | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p2_time_series_forecasting/notebook.ipynb) |
+| P3 · Causal Inference | Doubly-robust ATE, confounding, propensity scores | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p3_causal_inference/notebook.ipynb) |
+| P4 · Unsupervised Learning | KMeans + PCA on wine, silhouette k-selection | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p4_unsupervised_learning/notebook.ipynb) |
+| P5 · Survival Analysis | Cox PH on synthetic churn, censoring, Kaplan-Meier | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p5_survival_analysis/notebook.ipynb) |
+| P6 · Fairness Audit | Disparate impact, equalised odds, threshold fix | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p6_fairness_audit/notebook.ipynb) |
+| P7 · Anomaly Detection | Isolation Forest vs GBM, PR-AUC on 1% fraud | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p7_anomaly_detection/notebook.ipynb) |
+| P8 · Recommender System | MovieLens SVD, coverage vs RMSE trade-off | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p8_recommender/notebook.ipynb) |
+| P9 · NLP Classification | TF-IDF + LinearSVC on 20 Newsgroups, top features | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p9_nlp_classification/notebook.ipynb) |
+| P10 · Optimisation | LP budget allocation, MILP knapsack, Hungarian staffing | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p10_optimization/notebook.ipynb) |
+| P11 · Multi-Armed Bandits | Thompson sampling vs UCB1 vs epsilon-greedy, LinUCB | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p11_bandit/notebook.ipynb) |
+| P12 · RAG Pipeline | Chunking, TF-IDF retrieval, Recall@K, MRR | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/projects/p12_rag/notebook.ipynb) |
 
 **Case study:**
 
-| Case Study | Notebook |
-|---|---|
-| Churn prediction with uplift modelling | `case_study_churn_uplift/notebook.ipynb` |
+| Notebook | Topic | Launch |
+|---|---|---|
+| Churn + uplift modelling | Persuadables vs risk, T-learner CATE, ROI comparison | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/case_study_churn_uplift/notebook.ipynb) |
 
 ---
 
 ## Topic notebooks
 
-Standalone concept notebooks — each demonstrates one foundational DS topic with
-runnable, self-contained examples.
+Standalone concept notebooks — one key idea, fully runnable, ~10 minutes each.
 
-| Topic | Key concepts | Notebook |
+| Topic | Concepts | Launch |
 |---|---|---|
-| [Statistics fundamentals](02-statistics-that-matter.md) | Bootstrap CI, power analysis, BH correction, p-values | `notebooks/01-statistics-fundamentals.ipynb` |
-| [Model evaluation](04-evaluation-and-validation.md) | ROC vs PR-AUC, calibration curves, cost-based thresholds | `notebooks/02-model-evaluation.ipynb` |
-| [A/B testing & causal inference](09-causal-inference-and-experimentation.md) | Peeking problem, CUPED, T-learner CATE | `notebooks/03-ab-testing.ipynb` |
-| [NLP text classification](10-nlp-and-llms.md) | TF-IDF, top features, cosine similarity | `notebooks/04-nlp-text-classification.ipynb` |
-| [Feature engineering](03-data-and-feature-engineering.md) | Leakage guard, shuffle-label test, target encoding | `notebooks/05-feature-engineering.ipynb` |
+| Statistics fundamentals | Bootstrap CI, power analysis, p-values, BH correction | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/notebooks/01-statistics-fundamentals.ipynb) |
+| Model evaluation | ROC vs PR-AUC, calibration curves, cost-based thresholds | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/notebooks/02-model-evaluation.ipynb) |
+| A/B testing & causal inference | Peeking problem, CUPED, T-learner CATE | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/notebooks/03-ab-testing.ipynb) |
+| NLP text classification | TF-IDF, feature importance, cosine similarity | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/notebooks/04-nlp-text-classification.ipynb) |
+| Feature engineering | Leakage guard, shuffle-label test, target encoding | [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/notebooks/05-feature-engineering.ipynb) |
 
 ---
 
-## Tips for running notebooks
+## Tips
 
-**Execute all notebooks** (CI-style check):
+**First Binder load takes 1-3 minutes** — the environment is built once and
+cached. Subsequent loads are instant.
 
-```bash
-make notebooks
+**Run a specific notebook:**
+click any badge above, or use the full URL pattern:
+
+```
+https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab/tree/PATH/TO/notebook.ipynb
 ```
 
-**Run one notebook interactively:**
+**Execute all notebooks locally** (CI-style):
 
 ```bash
-jupyter lab projects/p1_supervised_learning/notebook.ipynb
+make notebooks   # requires: pip install jupyter
 ```
 
-**Run one notebook headlessly:**
-
-```bash
-jupyter nbconvert --to notebook --execute projects/p1_supervised_learning/notebook.ipynb \
-    --output projects/p1_supervised_learning/notebook_executed.ipynb
-```
-
-**VS Code:** open any `.ipynb` file directly — VS Code has a built-in notebook editor.
-No Jupyter installation needed; it uses the Python kernel from your virtual environment.
+**VS Code:** open any `.ipynb` directly — the built-in notebook editor
+uses your local Python kernel with no extra setup.

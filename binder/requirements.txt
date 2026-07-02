@@ -1,0 +1,21 @@
+# Binder environment — all packages needed to run every notebook in this repo.
+# Keep versions pinned to ensure reproducible Binder builds.
+# MyBinder installs jupyter/jupyterlab automatically; don't add them here.
+
+numpy>=1.26
+pandas>=2.0
+scikit-learn>=1.4
+scipy>=1.11
+statsmodels>=0.14
+matplotlib>=3.8
+seaborn>=0.13
+tabulate>=0.9
+
+# Project-specific
+lifelines>=0.27        # P5: survival analysis
+PuLP>=2.7             # P10: MILP optimisation
+networkx>=3.0         # doc 21: graph analysis
+openpyxl>=3.1         # retail domain example
+
+# Optional — installed so doc examples run fully
+mlxtend>=0.23         # association rules (doc 32)
