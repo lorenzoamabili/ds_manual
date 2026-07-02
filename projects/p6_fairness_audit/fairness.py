@@ -1,8 +1,8 @@
 """
-Project 6 — Algorithmic Fairness Audit
+Project 6 - Algorithmic Fairness Audit
 ======================================
 Setup : A hiring/lending-style screening model. A protected attribute `group` does
-        NOT enter the model, yet the model still discriminates — because a feature it
+        NOT enter the model, yet the model still discriminates - because a feature it
         DOES use was measured with historical bias against one group. This is the
         realistic failure mode: "we didn't use the protected attribute" is not a
         fairness guarantee.
@@ -14,7 +14,7 @@ Demonstrates:
   - A mitigation: group-specific decision thresholds that equalise opportunity,
     and the accuracy trade-off it costs.
 
-Fairness is not one number — these metrics can conflict, and which one matters is a
+Fairness is not one number - these metrics can conflict, and which one matters is a
 context and policy question, not a purely technical one (see docs/19).
 """
 import warnings; warnings.filterwarnings("ignore")
@@ -34,7 +34,7 @@ qualified = (skill + RNG.normal(0, 0.3, N) > 0.4).astype(int)
 # Observed score is measured with BIAS against group 1 (historical under-measurement).
 observed_score = skill - 0.6*group + RNG.normal(0, 0.5, N)
 df = pd.DataFrame({"group": group, "observed_score": observed_score, "qualified": qualified})
-print(f"True qualification rate — group0: {qualified[group==0].mean():.1%}, "
+print(f"True qualification rate - group0: {qualified[group==0].mean():.1%}, "
       f"group1: {qualified[group==1].mean():.1%}  (equal by construction)")
 
 tr, te = train_test_split(df, test_size=0.4, random_state=0, stratify=df.qualified)
@@ -63,7 +63,7 @@ def audit(te, thresholds):
 single = 0.5
 before = audit(te, {0: single, 1: single})
 di_before = before.loc[1, "selection_rate"] / before.loc[0, "selection_rate"]
-print("\n=== Single threshold (0.5) — the 'unaware' model ===")
+print("\n=== Single threshold (0.5) - the 'unaware' model ===")
 print(before.round(3).to_string())
 print(f"Disparate-impact ratio (group1/group0 selection): {di_before:.2f} "
       f"({'FAILS' if di_before < 0.8 else 'passes'} the 80% rule)")
@@ -103,16 +103,16 @@ ax[1].legend(fontsize=8)
 fig.tight_layout(); fig.savefig("fairness.png", dpi=120); plt.close(fig)
 
 with open("metrics.md", "w") as f:
-    f.write("# Project 6 — fairness audit\n\n")
+    f.write("# Project 6 - fairness audit\n\n")
     f.write("## 'Unaware' model, single threshold\n\n")
     f.write(before.round(3).to_markdown() + "\n\n")
-    f.write(f"Disparate-impact ratio = **{di_before:.2f}** — "
+    f.write(f"Disparate-impact ratio = **{di_before:.2f}** - "
             f"{'fails' if di_before<0.8 else 'passes'} the 80% rule despite the model "
             "never seeing the protected attribute.\n\n")
     f.write("## After equalising opportunity (group-specific thresholds)\n\n")
     f.write(after.round(3).to_markdown() + "\n\n")
     f.write(f"Disparate-impact ratio = **{di_after:.2f}**; overall accuracy moves "
             f"{before['accuracy'].mean():.3f} -> {after['accuracy'].mean():.3f}. "
-            "The gap closes at a small accuracy cost — the fairness/accuracy trade-off "
+            "The gap closes at a small accuracy cost - the fairness/accuracy trade-off "
             "made explicit rather than hidden.\n")
 print("\nSaved: fairness.png, metrics.md")

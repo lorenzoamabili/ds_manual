@@ -1,14 +1,14 @@
 """
-Project 5 — Survival / Time-to-Event Analysis
+Project 5 - Survival / Time-to-Event Analysis
 =============================================
 Setup : Simulated time-to-churn data with right-censoring and KNOWN hazard ratios,
         so we can check that the Cox model recovers the truth. Survival analysis is
         the right tool whenever you care about *when* an event happens and some
-        subjects haven't had it yet (censoring) — churn timing, equipment failure,
+        subjects haven't had it yet (censoring) - churn timing, equipment failure,
         clinical time-to-event, loan default timing.
 
 Why not ordinary regression? Because you cannot just drop or ignore the customers
-who haven't churned yet — that "censored" information ("survived at least this
+who haven't churned yet - that "censored" information ("survived at least this
 long") is real signal, and standard regression has no way to use it correctly.
 
 Demonstrates:
@@ -82,11 +82,11 @@ ax[1].legend(fontsize=8); ax[1].grid(alpha=.3)
 fig.tight_layout(); fig.savefig("survival.png", dpi=120); plt.close(fig)
 
 with open("metrics.md", "w") as f:
-    f.write(f"# Project 5 — survival analysis ({event.mean():.0%} events, rest censored)\n\n")
+    f.write(f"# Project 5 - survival analysis ({event.mean():.0%} events, rest censored)\n\n")
     f.write("## Cox proportional-hazards: estimated vs. planted effects\n\n")
     f.write(res.to_markdown() + "\n\n")
     f.write(f"Log-rank (premium vs standard): chi2={chisq:.1f}, p={pval:.1e}.\n\n")
     f.write("A hazard ratio of 0.5 means half the instantaneous churn rate. The Cox "
             "model recovers the planted log-hazard-ratios despite ~half the data being "
-            "censored — which is exactly the information ordinary regression throws away.\n")
+            "censored - which is exactly the information ordinary regression throws away.\n")
 print("\nSaved: survival.png, metrics.md")

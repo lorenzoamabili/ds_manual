@@ -1,5 +1,5 @@
 """
-Project 3 — Causal Inference from Observational Data
+Project 3 - Causal Inference from Observational Data
 ====================================================
 Setup   : Semi-synthetic data with a KNOWN true effect. We simulate a confounded
           "treatment" (e.g. enrolled in a training programme) whose assignment
@@ -123,7 +123,7 @@ ax[1].set(title="Covariate imbalance |SMD|", xlabel="|standardised mean diff|")
 fig.tight_layout(); fig.savefig("results.png", dpi=120); plt.close(fig)
 
 with open("metrics.md", "w") as f:
-    f.write(f"# Project 3 results — true ATE = {TRUE_ATE}\n\n")
+    f.write(f"# Project 3 results - true ATE = {TRUE_ATE}\n\n")
     f.write(est.to_frame("estimate").to_markdown() + "\n\n")
     f.write("The naive comparison is badly biased (confounders push treated units' "
             "baseline outcomes down). Regression, IPW, matching and AIPW all recover "

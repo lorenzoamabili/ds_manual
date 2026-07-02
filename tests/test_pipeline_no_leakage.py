@@ -1,7 +1,7 @@
 """A behavioural test for the practice the manual cares about most: no leakage.
 
 Rather than test a metric value (which can drift with library versions), we test
-the *structural* property that prevents leakage — that preprocessing lives inside
+the *structural* property that prevents leakage - that preprocessing lives inside
 the cross-validated estimator, so it is only ever fit on training folds.
 """
 import numpy as np

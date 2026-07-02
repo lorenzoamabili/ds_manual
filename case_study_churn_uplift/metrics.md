@@ -8,6 +8,6 @@
 |         75 |               9931 |           -18729 |   -18152 |
 |        100 |             -33936 |           -33936 |   -33936 |
 
-- Optimal policy: **treat top 30% by predicted uplift** -> net **Â£55,664** on this test cohort.
-- Treat-everyone: Â£-33,936. Best risk-targeting: Â£6,602.
+- Optimal policy: **treat top 30% by predicted uplift** -> net **£55,664** on this test cohort.
+- Treat-everyone: £-33,936. Best risk-targeting: £6,602.
 - Uplift-model ranking corr with ground truth: 0.649.

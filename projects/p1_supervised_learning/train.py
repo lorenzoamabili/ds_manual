@@ -1,5 +1,5 @@
 """
-Project 1 — Supervised Learning End-to-End (Binary Classification)
+Project 1 - Supervised Learning End-to-End (Binary Classification)
 =================================================================
 Dataset : Wisconsin Breast Cancer (bundled with scikit-learn, no download).
 Goal    : Predict malignant vs. benign tumours from 30 cell-nucleus features.
@@ -8,7 +8,7 @@ This script is a *template* for a real supervised workflow. It demonstrates the
 practices that separate a portfolio-grade project from a notebook dump:
 
   1. A single sklearn Pipeline so preprocessing is fit ONLY on training folds
-     (this is how you avoid data leakage — the #1 silent killer of DS projects).
+     (this is how you avoid data leakage - the #1 silent killer of DS projects).
   2. Stratified cross-validation for honest performance estimates.
   3. Multiple model families compared on the same footing.
   4. Threshold-independent metrics (ROC-AUC, PR-AUC) AND a calibration check,
@@ -113,7 +113,7 @@ ax[1].set(xlabel="Recall", ylabel="Precision", title="Precision-Recall (out-of-f
 for a in ax: a.legend(fontsize=8); a.grid(alpha=.3)
 fig.tight_layout(); fig.savefig("roc_pr.png", dpi=120); plt.close(fig)
 
-# 2) Calibration curve — do predicted probabilities match observed frequencies?
+# 2) Calibration curve - do predicted probabilities match observed frequencies?
 fig, axc = plt.subplots(figsize=(5.2, 5))
 for name, proba in oof_scores.items():
     frac_pos, mean_pred = calibration_curve(y_tr, proba, n_bins=10, strategy="quantile")
@@ -131,12 +131,12 @@ imp = pd.Series(perm.importances_mean, index=X.columns).sort_values()[-12:]
 fig, axi = plt.subplots(figsize=(6.5, 5))
 imp.plot.barh(ax=axi)
 axi.set(xlabel="Drop in ROC-AUC when feature is shuffled",
-        title=f"Permutation importance — {best_name}")
+        title=f"Permutation importance - {best_name}")
 fig.tight_layout(); fig.savefig("importance.png", dpi=120); plt.close(fig)
 
 # ---------------------------------------------------------------- write report
 with open("metrics.md", "w") as f:
-    f.write(f"# Project 1 results — {best_name} selected\n\n")
+    f.write(f"# Project 1 results - {best_name} selected\n\n")
     f.write("## 5-fold cross-validated (training set)\n\n")
     f.write(cv_table.to_markdown() + "\n\n")
     f.write("## Held-out test set\n\n")

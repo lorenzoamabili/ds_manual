@@ -1,4 +1,4 @@
-# Project 5 — survival analysis (56% events, rest censored)
+# Project 5 - survival analysis (56% events, rest censored)
 
 ## Cox proportional-hazards: estimated vs. planted effects
 
@@ -10,4 +10,4 @@
 
 Log-rank (premium vs standard): chi2=163.5, p=0.0e+00.
 
-A hazard ratio of 0.5 means half the instantaneous churn rate. The Cox model recovers the planted log-hazard-ratios despite ~half the data being censored — which is exactly the information ordinary regression throws away.
+A hazard ratio of 0.5 means half the instantaneous churn rate. The Cox model recovers the planted log-hazard-ratios despite ~half the data being censored - which is exactly the information ordinary regression throws away.

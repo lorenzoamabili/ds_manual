@@ -1,4 +1,4 @@
-# P10 · Optimisation — Metrics
+# P10 · Optimisation - Metrics
 
 ## Problem 1: LP Budget Allocation
 
@@ -8,7 +8,7 @@
 ## Problem 2: MILP Campaign Selection
 
 - Solver: Greedy (ROI order)
-- Selected 5/10 campaigns | ROI: 36.33×
+- Selected 5/10 campaigns | ROI: 36.33x
 
 ## Problem 3: Staffing Assignment
 

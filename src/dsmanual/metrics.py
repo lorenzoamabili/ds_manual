@@ -1,4 +1,4 @@
-"""dsmanual — small, tested, reusable utilities shared by the projects.
+"""dsmanual - small, tested, reusable utilities shared by the projects.
 
 The manual's docs argue that transformation logic should live in importable,
 tested code rather than one-off notebook cells. This package is that principle

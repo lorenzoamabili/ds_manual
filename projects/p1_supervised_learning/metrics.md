@@ -1,4 +1,4 @@
-# Project 1 results — LogReg (L2) selected
+# Project 1 results - LogReg (L2) selected
 
 ## 5-fold cross-validated (training set)
 

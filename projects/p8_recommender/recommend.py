@@ -1,5 +1,5 @@
 """
-Project 8 — Recommendation Systems
+Project 8 - Recommendation Systems
 =====================================
 Dataset : MovieLens 100K (via scikit-surprise or direct CSV download).
 Goal    : Compare a popularity baseline, user-based CF, and SVD matrix
@@ -28,11 +28,11 @@ import urllib.request, zipfile, io
 OUT = Path(__file__).parent
 rng = np.random.default_rng(42)
 
-# ── Load MovieLens 100K ───────────────────────────────────────────────────────
+# -- Load MovieLens 100K -------------------------------------------------------
 def load_movielens():
     """Download and parse MovieLens 100K (ua.base / ua.test split)."""
     url = "https://files.grouplens.org/datasets/movielens/ml-100k.zip"
-    print(f"Downloading MovieLens 100K from {url}…")
+    print(f"Downloading MovieLens 100K from {url}...")
     try:
         req = urllib.request.urlopen(url, timeout=30)
         zf = zipfile.ZipFile(io.BytesIO(req.read()))
@@ -46,7 +46,7 @@ def load_movielens():
         )
         return train, test
     except Exception as e:
-        print(f"Download failed ({e}) — using synthetic ratings.")
+        print(f"Download failed ({e}) - using synthetic ratings.")
         return None, None
 
 def make_synthetic():
@@ -83,7 +83,7 @@ if train_df is None:
 print(f"Train: {len(train_df):,} ratings | Test: {len(test_df):,} ratings")
 print(f"Users: {train_df['user'].nunique()} | Items: {train_df['item'].nunique()}")
 
-# ── Utility: precision@K and coverage ─────────────────────────────────────────
+# -- Utility: precision@K and coverage -----------------------------------------
 def precision_at_k(recommendations, test_df, k=10, threshold=4.0):
     """Precision@K: fraction of top-K recs that are relevant (rating >= threshold)."""
     relevant = defaultdict(set)
@@ -105,7 +105,7 @@ def catalog_coverage(recommendations, n_items):
         all_recs.update(recs)
     return len(all_recs) / n_items
 
-# ── Build user-item matrix ─────────────────────────────────────────────────────
+# -- Build user-item matrix -----------------------------------------------------
 all_items = sorted(set(train_df["item"]) | set(test_df["item"]))
 all_users = sorted(train_df["user"].unique())
 n_items   = len(all_items)
@@ -123,7 +123,7 @@ user_means  = np.where(R.sum(axis=1, keepdims=True) > 0,
                         R.sum(axis=1, keepdims=True) / np.maximum((R > 0).sum(axis=1, keepdims=True), 1),
                         global_mean)
 
-# ── Model 1: Popularity baseline ────────────────────────────────────────────
+# -- Model 1: Popularity baseline --------------------------------------------
 item_popularity = (R > 0).sum(axis=0)  # number of ratings per item
 top_popular     = np.argsort(item_popularity)[::-1][:50].tolist()
 popular_items   = [all_items[i] for i in top_popular]
@@ -143,7 +143,7 @@ for row in test_df.itertuples():
         test_actuals.append(row.rating)
 rmse_popular = np.sqrt(np.mean((np.array(test_preds_pop) - np.array(test_actuals))**2))
 
-# ── Model 2: User-based collaborative filtering ────────────────────────────
+# -- Model 2: User-based collaborative filtering ----------------------------
 # Cosine similarity between users
 from sklearn.metrics.pairwise import cosine_similarity
 sim_matrix = cosine_similarity(R)
@@ -184,7 +184,7 @@ for uid in all_users[:200]:  # limit for speed
             scores[item] = ubcf_predict(ui, ii, sim_matrix, R)
     ubcf_recommendations[uid] = sorted(scores, key=scores.get, reverse=True)[:10]
 
-# ── Model 3: SVD matrix factorization ────────────────────────────────────────
+# -- Model 3: SVD matrix factorization ----------------------------------------
 from numpy.linalg import svd
 
 # Mean-centre the rating matrix
@@ -216,7 +216,7 @@ for uid in all_users[:200]:
               for item in all_items if item not in rated_items}
     svd_recommendations[uid] = sorted(scores, key=scores.get, reverse=True)[:10]
 
-# ── Precision@10 and coverage ─────────────────────────────────────────────────
+# -- Precision@10 and coverage -------------------------------------------------
 users_with_recs = set(pop_recommendations) & set(ubcf_recommendations) & set(svd_recommendations)
 test_filtered   = test_df[test_df["user"].isin(users_with_recs)]
 
@@ -236,18 +236,18 @@ covs   = [cov_pop, cov_ubcf, cov_svd]
 summary = pd.DataFrame({"RMSE": rmses, "Precision@10": p10s, "Coverage": covs}, index=models)
 print("\n" + summary.round(3).to_string())
 
-# ── Write metrics.md ─────────────────────────────────────────────────────────
+# -- Write metrics.md ---------------------------------------------------------
 with open(OUT / "metrics.md", "w") as f:
-    f.write("# P8 · Recommender System — Metrics\n\n")
+    f.write("# P8 · Recommender System - Metrics\n\n")
     f.write("**Dataset:** MovieLens 100K (or synthetic if download unavailable)\n\n")
     f.write(summary.round(3).to_markdown())
     f.write("\n\n## Key insight\n\n")
-    f.write("The popularity baseline may have competitive RMSE but terrible coverage — "
+    f.write("The popularity baseline may have competitive RMSE but terrible coverage - "
             "it recommends the same blockbusters to everyone.\n")
     f.write("SVD improves coverage and precision simultaneously.\n")
     f.write("**Never evaluate a recommender system on RMSE alone.**\n")
 
-# ── Plots ─────────────────────────────────────────────────────────────────────
+# -- Plots ---------------------------------------------------------------------
 fig, axes = plt.subplots(1, 3, figsize=(12, 4))
 colors = ["#3498db", "#e74c3c", "#2ecc71"]
 for ax, col, title in zip(axes, ["RMSE", "Precision@10", "Coverage"],
@@ -265,5 +265,5 @@ plt.savefig(OUT / "rmse_comparison.png", dpi=120)
 plt.close()
 
 print("\nOutputs written: metrics.md, rmse_comparison.png")
-print("\nLesson: popularity baseline has narrow coverage — recommends blockbusters only.")
+print("\nLesson: popularity baseline has narrow coverage - recommends blockbusters only.")
 print("SVD discovers long-tail items while maintaining accuracy.")

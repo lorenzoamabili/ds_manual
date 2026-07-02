@@ -1,4 +1,4 @@
-"""Tests for dsmanual.metrics — the shared, project-critical utilities.
+"""Tests for dsmanual.metrics - the shared, project-critical utilities.
 
 These are behavioural tests: known-answer checks, invariants, and the guardrails
 that should raise rather than silently return nonsense.

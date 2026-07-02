@@ -1,9 +1,9 @@
 """
-P11 · Multi-armed bandit — epsilon-greedy vs UCB1 vs Thompson sampling.
+P11 · Multi-armed bandit - epsilon-greedy vs UCB1 vs Thompson sampling.
 
 Real lesson: explore/exploit trade-off. Thompson sampling empirically
 dominates on cumulative reward with sub-linear regret. Contextual bandits
-(LinUCB) condition arm selection on features — the production standard
+(LinUCB) condition arm selection on features - the production standard
 for personalisation systems.
 """
 import numpy as np
@@ -13,7 +13,7 @@ import matplotlib.pyplot as plt
 
 rng = np.random.default_rng(42)
 
-# ── Problem setup ─────────────────────────────────────────────────────────────
+# -- Problem setup -------------------------------------------------------------
 # 5 marketing message variants; true conversion rates unknown to the algorithm
 TRUE_P = [0.10, 0.15, 0.20, 0.35, 0.25]
 K      = len(TRUE_P)
@@ -28,7 +28,7 @@ def pull(arm: int) -> int:
     return int(rng.random() < TRUE_P[arm])
 
 
-# ── Epsilon-greedy ────────────────────────────────────────────────────────────
+# -- Epsilon-greedy ------------------------------------------------------------
 def epsilon_greedy(eps: float = 0.10) -> list[int]:
     counts, rewards = np.zeros(K), np.zeros(K)
     cumulative, history = 0, []
@@ -45,7 +45,7 @@ def epsilon_greedy(eps: float = 0.10) -> list[int]:
     return history, counts
 
 
-# ── UCB1 ──────────────────────────────────────────────────────────────────────
+# -- UCB1 ----------------------------------------------------------------------
 def ucb1() -> list[int]:
     counts, rewards = np.zeros(K), np.zeros(K)
     cumulative, history = 0, []
@@ -63,7 +63,7 @@ def ucb1() -> list[int]:
     return history, counts
 
 
-# ── Thompson sampling ─────────────────────────────────────────────────────────
+# -- Thompson sampling ---------------------------------------------------------
 def thompson() -> list[int]:
     alpha = np.ones(K)
     beta  = np.ones(K)
@@ -78,13 +78,13 @@ def thompson() -> list[int]:
     return history, alpha - 1  # successes = alpha - 1
 
 
-# ── Run all ───────────────────────────────────────────────────────────────────
+# -- Run all -------------------------------------------------------------------
 eg_hist, eg_counts   = epsilon_greedy(eps=0.10)
 ub_hist, ub_counts   = ucb1()
 th_hist, th_alpha    = thompson()
 oracle               = np.cumsum([max(TRUE_P)] * T)
 
-# ── Contextual bandit (LinUCB) ────────────────────────────────────────────────
+# -- Contextual bandit (LinUCB) ------------------------------------------------
 D     = 5   # context features: age-group, device, hour-bucket, recency, region
 TRUE_W = rng.normal(0, 1, (K, D))   # true reward weights (unknown to algorithm)
 ALPHA = 1.0
@@ -108,7 +108,7 @@ for _ in range(T):
     ctx_cumulative += r
     ctx_history.append(ctx_cumulative)
 
-# ── Results ───────────────────────────────────────────────────────────────────
+# -- Results -------------------------------------------------------------------
 print("-" * 48)
 print(f"{'Algorithm':<20} {'Reward':>8} {'Regret':>8}")
 print("-" * 48)
@@ -127,7 +127,7 @@ for name, counts in [("Epsilon-greedy", eg_counts), ("UCB1", ub_counts)]:
     print(f"  {name}: {counts.astype(int)}")
 print(f"  Thompson successes: {th_alpha.astype(int)}")
 
-# ── Plot ──────────────────────────────────────────────────────────────────────
+# -- Plot ----------------------------------------------------------------------
 fig, axes = plt.subplots(1, 3, figsize=(16, 4))
 
 ax = axes[0]

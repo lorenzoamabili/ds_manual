@@ -1,5 +1,5 @@
 """
-Project 7 — Anomaly Detection (Imbalanced Classification)
+Project 7 - Anomaly Detection (Imbalanced Classification)
 ==========================================================
 Dataset : Synthetic credit-card-style fraud data (seeded, reproducible).
 Goal    : Detect rare anomalies (0.5% positive rate) without labelled
@@ -36,9 +36,9 @@ from sklearn.metrics import (
 OUT = Path(__file__).parent
 rng = np.random.default_rng(42)
 
-# ── Simulate imbalanced fraud-like dataset ───────────────────────────────────
-# 99.5% normal, 0.5% fraud — typical of real card fraud
-print("Generating synthetic fraud dataset (n=20 000, fraud_rate=0.5%)…")
+# -- Simulate imbalanced fraud-like dataset -----------------------------------
+# 99.5% normal, 0.5% fraud - typical of real card fraud
+print("Generating synthetic fraud dataset (n=20 000, fraud_rate=0.5%)...")
 X, y = make_classification(
     n_samples=20_000,
     n_features=20,
@@ -57,11 +57,11 @@ scaler  = StandardScaler().fit(X_tr)
 X_tr_s  = scaler.transform(X_tr)
 X_te_s  = scaler.transform(X_te)
 
-# ── Baselines & models ────────────────────────────────────────────────────────
+# -- Baselines & models --------------------------------------------------------
 # 1. Naive: predict-all-normal baseline
 naive_pred  = np.zeros(len(y_te), dtype=int)
 
-# 2. Isolation Forest (unsupervised — no labels used in training)
+# 2. Isolation Forest (unsupervised - no labels used in training)
 iso = IsolationForest(n_estimators=200, contamination=0.005, random_state=42)
 iso.fit(X_tr_s)
 iso_scores = -iso.score_samples(X_te_s)   # higher = more anomalous
@@ -73,13 +73,13 @@ lof.fit(X_tr_s)
 lof_scores = -lof.score_samples(X_te_s)
 lof_pred   = (lof_scores >= np.quantile(lof_scores, 0.995)).astype(int)
 
-# 4. Supervised GBM (uses labels — best case ceiling)
+# 4. Supervised GBM (uses labels - best case ceiling)
 gbm = GradientBoostingClassifier(n_estimators=100, max_depth=3, random_state=42)
 gbm.fit(X_tr_s, y_tr)
 gbm_proba  = gbm.predict_proba(X_te_s)[:, 1]
 gbm_pred   = (gbm_proba >= 0.5).astype(int)
 
-# ── Evaluate ──────────────────────────────────────────────────────────────────
+# -- Evaluate ------------------------------------------------------------------
 results = {}
 
 def evaluate(name, y_true, y_pred, y_score):
@@ -102,25 +102,25 @@ results["GBM (supervised)"]    = evaluate("GBM",    y_te, gbm_pred,   gbm_proba)
 df_results = pd.DataFrame(results).T
 print("\n" + df_results.round(3).to_string())
 
-# ── Write metrics.md ─────────────────────────────────────────────────────────
+# -- Write metrics.md ---------------------------------------------------------
 with open(OUT / "metrics.md", "w") as f:
-    f.write("# P7 · Anomaly Detection — Metrics\n\n")
-    f.write(f"**Dataset:** Synthetic fraud (n=20 000, fraud_rate≈0.5%)\n\n")
+    f.write("# P7 · Anomaly Detection - Metrics\n\n")
+    f.write(f"**Dataset:** Synthetic fraud (n=20 000, fraud_rate~0.5%)\n\n")
     f.write(df_results.round(3).to_markdown())
     f.write("\n\n## Key insight\n\n")
-    f.write("The naive model (predict all normal) achieves **99.5% accuracy** — "
+    f.write("The naive model (predict all normal) achieves **99.5% accuracy** - "
             "yet it catches zero fraud.\n")
     f.write("This is why accuracy is misleading on imbalanced data.\n")
     f.write("**PR-AUC** is the correct primary metric: it measures performance "
             "across all thresholds weighted toward the rare class.\n")
 
-# ── Plot 1: anomaly score distributions ──────────────────────────────────────
+# -- Plot 1: anomaly score distributions --------------------------------------
 fig, axes = plt.subplots(1, 2, figsize=(12, 4))
 for ax, (name, scores) in zip(axes, [("Isolation Forest", iso_scores),
                                       ("GBM probability", gbm_proba)]):
     ax.hist(scores[y_te == 0], bins=60, alpha=0.6, label="Normal", density=True)
     ax.hist(scores[y_te == 1], bins=60, alpha=0.8, label="Fraud",  density=True, color="red")
-    ax.set_title(f"Score distribution — {name}")
+    ax.set_title(f"Score distribution - {name}")
     ax.set_xlabel("Anomaly score")
     ax.set_ylabel("Density")
     ax.legend()
@@ -129,7 +129,7 @@ plt.tight_layout()
 plt.savefig(OUT / "anomaly_scores.png", dpi=120)
 plt.close()
 
-# ── Plot 2: Precision-Recall curves ──────────────────────────────────────────
+# -- Plot 2: Precision-Recall curves ------------------------------------------
 fig, ax = plt.subplots(figsize=(7, 5))
 for label, scores in [("Isolation Forest", iso_scores),
                        ("LOF",             lof_scores),
@@ -143,4 +143,4 @@ plt.close()
 
 print("\nOutputs written: metrics.md, anomaly_scores.png, pr_curve.png")
 print("\nLesson: naive accuracy = 99.5% but catches zero fraud.")
-print(f"GBM PR-AUC = {results['GBM (supervised)']['PR-AUC']:.3f} — this is the real signal.")
+print(f"GBM PR-AUC = {results['GBM (supervised)']['PR-AUC']:.3f} - this is the real signal.")

@@ -1,5 +1,5 @@
 """
-CASE STUDY — Retention offers: who should we actually target?
+CASE STUDY - Retention offers: who should we actually target?
 =============================================================
 A worked, end-to-end study that goes framing -> data -> model -> CAUSAL uplift ->
 a decision, on a reproducible simulated business scenario.
@@ -8,14 +8,14 @@ THE SCENARIO (framing)
 ----------------------
 A subscription business loses customers each month. Marketing can send a
 retention offer (a discount) but it costs money and can't be sent to everyone.
-Leadership asks: "Use the data to reduce churn." The naive reading — "predict who
-will churn and target them" — is WRONG, and this study shows why with numbers.
+Leadership asks: "Use the data to reduce churn." The naive reading - "predict who
+will churn and target them" - is WRONG, and this study shows why with numbers.
 
 The right question is causal: for whom does the offer *change* the outcome? That
 is the customer's UPLIFT (churn probability without the offer minus with it). A
 high-risk customer who will churn regardless (bad-service driven) is a wasted
 offer; a price-sensitive "persuadable" is where the money is. Some loyal
-customers are "sleeping dogs" — the offer reminds them to reconsider and slightly
+customers are "sleeping dogs" - the offer reminds them to reconsider and slightly
 *raises* churn. Targeting by risk cannot tell these apart; targeting by uplift can.
 
 We ran a pilot RCT: a random 50% of customers received the offer. Because
@@ -159,18 +159,18 @@ with open("metrics.md", "w") as f:
     f.write(f"- Uplift-model ranking corr with ground truth: {rank_corr:.3f}.\n")
 
 with open("business_case.md", "w") as f:
-    f.write(f"""# Retention offers — recommendation
+    f.write(f"""# Retention offers - recommendation
 
 ## Bottom line
 Do **not** target the customers most likely to churn. Target the customers whose
 behaviour the offer actually *changes*. On the pilot cohort, ranking by predicted
 **uplift** and offering to the top **{best_budget:.0%}** yields **£{best_value:,.0f}**
-net value — versus **£{max(val_risk):,.0f}** for the intuitive "target the
+net value - versus **£{max(val_risk):,.0f}** for the intuitive "target the
 high-risk" policy and **£{value_treat_all:,.0f}** for offering to everyone.
 
 ## Why the naive approach loses money
 Churn risk and persuadability are different things. Many high-risk customers are
-leaving because of unresolved service problems — a discount doesn't fix that, so
+leaving because of unresolved service problems - a discount doesn't fix that, so
 the offer is wasted. A minority of loyal customers are "sleeping dogs": the offer
 reminds them to reconsider and slightly *increases* churn. The right-hand panel of
 `uplift_analysis.png` shows risk and uplift are only weakly related.

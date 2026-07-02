@@ -1,11 +1,11 @@
 """
-Project 10 — Optimisation & Operations Research
+Project 10 - Optimisation & Operations Research
 ================================================
 Three classic optimisation problems, each paired with a business framing:
 
-1. LP — marketing budget allocation (scipy linprog)
-2. MILP — 0/1 knapsack (PuLP with CBC solver)
-3. Assignment — staffing schedule (scipy linear_sum_assignment)
+1. LP - marketing budget allocation (scipy linprog)
+2. MILP - 0/1 knapsack (PuLP with CBC solver)
+3. Assignment - staffing schedule (scipy linear_sum_assignment)
 
 Real lesson: Optimisation turns a model's outputs (predicted revenue, predicted
 risk) into *actions* under constraints. A perfect model with no optimisation layer
@@ -26,9 +26,9 @@ from scipy.optimize import linprog, linear_sum_assignment
 OUT = Path(__file__).parent
 rng = np.random.default_rng(42)
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 # Problem 1: Marketing budget allocation (LP)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 print("-" * 60)
 print("Problem 1: Marketing budget allocation (LP)")
 print("-" * 60)
@@ -95,9 +95,9 @@ else:
     naive_rev = total_revenue
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
-# Problem 2: 0/1 Knapsack (campaign selection — MILP)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
+# Problem 2: 0/1 Knapsack (campaign selection - MILP)
+# ===============================================================================
 print("\n" + "-" * 60)
 print("Problem 2: Campaign selection (0/1 Knapsack / MILP)")
 print("-" * 60)
@@ -120,7 +120,7 @@ try:
     solver_name = "MILP (PuLP/CBC)"
 except ImportError:
     # Greedy fallback: sort by ROI and fill budget
-    print("  (PuLP not installed — using greedy ROI heuristic)")
+    print("  (PuLP not installed - using greedy ROI heuristic)")
     roi = revenues / costs
     order = np.argsort(-roi)
     selected = np.zeros(n_items, int)
@@ -147,7 +147,7 @@ ax.bar(x_pos, -costs,   color=colors, alpha=0.4)
 ax.axhline(0, color="black", lw=0.5)
 ax.set(xticks=x_pos, xticklabels=[f"C{i+1}" for i in range(n_items)],
        ylabel="£k  (green=selected, red=skipped)",
-       title=f"Campaign selection — {solver_name}\n"
+       title=f"Campaign selection - {solver_name}\n"
              f"Selected: {selected.sum()} campaigns, revenue: £{total_rev:.0f}k")
 plt.tight_layout()
 plt.savefig(OUT / "knapsack_items.png", dpi=120)
@@ -155,14 +155,14 @@ plt.close()
 print("Plot saved: knapsack_items.png")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 # Problem 3: Staffing assignment (Hungarian algorithm)
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 print("\n" + "-" * 60)
 print("Problem 3: Staff-to-shift assignment (Hungarian algorithm)")
 print("-" * 60)
 
-# 5 staff × 5 shifts: cost matrix = predicted dissatisfaction (lower = better)
+# 5 staff x 5 shifts: cost matrix = predicted dissatisfaction (lower = better)
 # Each row: staff member; each col: shift slot
 n_staff = 5
 staff_names = ["Alice", "Bob", "Carlos", "Diana", "Eve"]
@@ -191,17 +191,17 @@ print(f"\nTotal dissatisfaction: {total_cost}  (random average: {random_avg:.1f}
 print(f"Improvement over random: {(random_avg - total_cost)/random_avg:.1%}")
 
 
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 # Write metrics.md
-# ═══════════════════════════════════════════════════════════════════════════════
+# ===============================================================================
 with open(OUT / "metrics.md", "w") as f:
-    f.write("# P10 · Optimisation — Metrics\n\n")
+    f.write("# P10 · Optimisation - Metrics\n\n")
     f.write("## Problem 1: LP Budget Allocation\n\n")
     f.write(f"- Optimal revenue: **£{total_revenue:.1f}k** vs. naive equal-split: £{naive_rev:.1f}k\n")
     f.write(f"- Uplift: **£{total_revenue - naive_rev:.1f}k ({(total_revenue/naive_rev-1):.1%})**\n\n")
     f.write("## Problem 2: MILP Campaign Selection\n\n")
     f.write(f"- Solver: {solver_name}\n")
-    f.write(f"- Selected {selected.sum()}/{n_items} campaigns | ROI: {total_rev/total_cost:.2f}×\n\n")
+    f.write(f"- Selected {selected.sum()}/{n_items} campaigns | ROI: {total_rev/total_cost:.2f}x\n\n")
     f.write("## Problem 3: Staffing Assignment\n\n")
     f.write(f"- Hungarian algorithm total dissatisfaction: **{total_cost}**\n")
     f.write(f"- Random baseline average: {random_avg:.1f} | "

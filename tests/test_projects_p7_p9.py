@@ -17,7 +17,7 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import Pipeline
 
 
-# ─────────────────────────────────────────────────────────── P7 Anomaly
+# ----------------------------------------------------------- P7 Anomaly
 class TestP7Anomaly:
     """Accuracy is a lie on imbalanced data; PR-AUC is the real metric."""
 
@@ -39,7 +39,7 @@ class TestP7Anomaly:
         _, X_te, _, y_te = imbalanced_data
         naive_scores = np.zeros(len(y_te))
         pr_auc = average_precision_score(y_te, naive_scores)
-        # PR-AUC baseline ≈ positive rate; naive model should not beat it
+        # PR-AUC baseline ~ positive rate; naive model should not beat it
         assert pr_auc < 0.05
 
     def test_isolation_forest_pr_auc_beats_naive(self, imbalanced_data):
@@ -61,16 +61,16 @@ class TestP7Anomaly:
         gbm.fit(scaler.transform(X_tr), y_tr)
         proba = gbm.predict_proba(scaler.transform(X_te))[:, 1]
         pr_auc = average_precision_score(y_te, proba)
-        # With ~1% positive rate the naive baseline PR-AUC ≈ positive rate.
-        # A working supervised model should achieve at least 5× the baseline.
+        # With ~1% positive rate the naive baseline PR-AUC ~ positive rate.
+        # A working supervised model should achieve at least 5x the baseline.
         naive_baseline = y_te.mean()
         assert pr_auc > 5 * naive_baseline, (
-            f"GBM PR-AUC {pr_auc:.3f} should beat 5× naive baseline "
+            f"GBM PR-AUC {pr_auc:.3f} should beat 5x naive baseline "
             f"({5 * naive_baseline:.3f}); positive rate = {naive_baseline:.3f}"
         )
 
 
-# ─────────────────────────────────────────────────────────── P8 Recommender
+# ----------------------------------------------------------- P8 Recommender
 class TestP8Recommender:
     """RMSE hides popularity bias; coverage and precision@K matter."""
 
@@ -91,7 +91,7 @@ class TestP8Recommender:
         # Popularity-based recs for all users are the same 10 items
         n_unique = len(top10)
         assert n_unique == 10
-        # Coverage = 10 / 50 = 20% ceiling — much less than catalog
+        # Coverage = 10 / 50 = 20% ceiling - much less than catalog
         coverage = n_unique / R.shape[1]
         assert coverage <= 0.20
 
@@ -122,11 +122,11 @@ class TestP8Recommender:
         assert hits >= 0  # structural check; real data drives the number
 
 
-# ─────────────────────────────────────────────────────────── P9 NLP
+# ----------------------------------------------------------- P9 NLP
 class TestP9NLP:
     """TF-IDF + logistic regression is a strong NLP baseline."""
 
-    # Overlapping comp.* categories — NB struggles here, LinearSVC wins clearly
+    # Overlapping comp.* categories - NB struggles here, LinearSVC wins clearly
     CATEGORIES = ["comp.graphics", "comp.os.ms-windows.misc",
                   "comp.sys.ibm.pc.hardware", "comp.sys.mac.hardware"]
 
@@ -156,7 +156,7 @@ class TestP9NLP:
         assert f1 > majority_f1
 
     def test_linear_svc_beats_naive_bayes_f1(self, newsgroups):
-        """LinearSVC (TF-IDF) should beat Naive Bayes — lesson: go beyond NB."""
+        """LinearSVC (TF-IDF) should beat Naive Bayes - lesson: go beyond NB."""
         from sklearn.naive_bayes import MultinomialNB
         from sklearn.feature_extraction.text import CountVectorizer
         from sklearn.svm import LinearSVC
@@ -177,7 +177,7 @@ class TestP9NLP:
         )
 
     def test_top_features_are_class_specific(self, newsgroups):
-        """LR coefficients should have class-specific vocabulary — sanity check."""
+        """LR coefficients should have class-specific vocabulary - sanity check."""
         train, _ = newsgroups
         pipe = Pipeline([
             ("vec", TfidfVectorizer(max_features=5_000)),

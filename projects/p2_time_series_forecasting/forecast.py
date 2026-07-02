@@ -1,5 +1,5 @@
 """
-Project 2 — Time Series Forecasting
+Project 2 - Time Series Forecasting
 ===================================
 Dataset : Monthly international airline passengers, 1949-1960 (144 points).
           Real open data, fetched from the jbrownlee/Datasets mirror on GitHub.
@@ -7,7 +7,7 @@ Goal    : Forecast the next 24 months and evaluate honestly.
 
 Why this project matters for a portfolio: forecasting is where beginners most
 often fool themselves. The two cardinal sins are (a) evaluating with a random
-train/test split — which leaks the future into the past — and (b) reporting only
+train/test split - which leaks the future into the past - and (b) reporting only
 in-sample fit. This script does neither. It uses a *rolling-origin backtest*
 (a.k.a. time-series cross-validation) and compares real models against a
 seasonal-naive baseline, because a model that can't beat "same month last year"
@@ -62,7 +62,7 @@ for c in cutoffs:
 
 bt = pd.DataFrame(results, index=[f"origin@{y.index[c-1]:%Y-%m}" for c in cutoffs])
 bt.loc["MEAN"] = bt.mean()
-print("\n=== Rolling-origin backtest — MAPE %% (lower is better) ===")
+print("\n=== Rolling-origin backtest - MAPE %% (lower is better) ===")
 print(bt.round(2).to_string())
 best = bt.loc["MEAN"].idxmin()
 print(f"\nBest by mean MAPE: {best}")
@@ -91,10 +91,10 @@ ax.legend(); ax.grid(alpha=.3)
 fig.tight_layout(); fig.savefig("forecast.png", dpi=120); plt.close(fig)
 
 with open("metrics.md", "w") as f:
-    f.write("# Project 2 results — rolling-origin backtest\n\n")
+    f.write("# Project 2 results - rolling-origin backtest\n\n")
     f.write("MAPE (%) across three forecast origins, 12-month horizon each:\n\n")
     f.write(bt.round(2).to_markdown() + "\n\n")
     f.write(f"**Winner: {best}.** Note that both statistical models must be "
-            "compared against the seasonal-naive baseline — reporting an absolute "
+            "compared against the seasonal-naive baseline - reporting an absolute "
             "error without that reference is meaningless.\n")
 print("\nSaved: decomposition.png, forecast.png, metrics.md")

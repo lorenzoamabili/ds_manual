@@ -1,21 +1,21 @@
-# Retention offers â€” recommendation
+# Retention offers - recommendation
 
 ## Bottom line
 Do **not** target the customers most likely to churn. Target the customers whose
 behaviour the offer actually *changes*. On the pilot cohort, ranking by predicted
-**uplift** and offering to the top **30%** yields **Â£55,664**
-net value â€” versus **Â£6,602** for the intuitive "target the
-high-risk" policy and **Â£-33,936** for offering to everyone.
+**uplift** and offering to the top **30%** yields **£55,664**
+net value - versus **£6,602** for the intuitive "target the
+high-risk" policy and **£-33,936** for offering to everyone.
 
 ## Why the naive approach loses money
 Churn risk and persuadability are different things. Many high-risk customers are
-leaving because of unresolved service problems â€” a discount doesn't fix that, so
+leaving because of unresolved service problems - a discount doesn't fix that, so
 the offer is wasted. A minority of loyal customers are "sleeping dogs": the offer
 reminds them to reconsider and slightly *increases* churn. The right-hand panel of
 `uplift_analysis.png` shows risk and uplift are only weakly related.
 
 ## The decision rule
-Offer to a customer when `predicted_uplift * Â£150 > Â£8`,
+Offer to a customer when `predicted_uplift * £150 > £8`,
 i.e. predicted uplift above **0.053**. This maximises expected net
 value per customer and generalises to any budget.
 

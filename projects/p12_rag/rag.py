@@ -3,7 +3,7 @@ P12 · Retrieval-Augmented Generation (RAG) pipeline.
 
 Demonstrates: chunking, TF-IDF retrieval (swap for dense embeddings
 in production), BM25 vs dense retrieval, reranking, and Recall@K
-evaluation. Does not require an LLM API key — the retrieval stage
+evaluation. Does not require an LLM API key - the retrieval stage
 is fully evaluated independently.
 
 Real lesson: retrieval quality determines answer quality. A weak
@@ -15,7 +15,7 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# ── Knowledge base ────────────────────────────────────────────────────────────
+# -- Knowledge base ------------------------------------------------------------
 DOCUMENTS = {
     "doc_eval":    """
 Model evaluation: PR-AUC is preferred over ROC-AUC for imbalanced datasets.
@@ -81,7 +81,7 @@ limitations, and fairness evaluation results.
 """,
 }
 
-# ── Chunking ──────────────────────────────────────────────────────────────────
+# -- Chunking ------------------------------------------------------------------
 def chunk_document(doc_id: str, text: str, chunk_size: int = 2,
                    overlap: int = 1) -> list[dict]:
     sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', text.strip()) if s.strip()]
@@ -104,7 +104,7 @@ for doc_id, text in DOCUMENTS.items():
 
 print(f"Corpus: {len(DOCUMENTS)} documents -> {len(all_chunks)} chunks\n")
 
-# ── Retrieval: TF-IDF (sparse) ────────────────────────────────────────────────
+# -- Retrieval: TF-IDF (sparse) ------------------------------------------------
 chunk_texts = [c["text"] for c in all_chunks]
 tfidf_vec   = TfidfVectorizer(ngram_range=(1, 2), max_features=5000).fit(chunk_texts)
 chunk_vecs  = tfidf_vec.transform(chunk_texts)
@@ -115,7 +115,7 @@ def retrieve_tfidf(query: str, k: int = 3) -> list[dict]:
     top_k = np.argsort(sims)[-k:][::-1]
     return [(all_chunks[i], float(sims[i])) for i in top_k]
 
-# ── Evaluation: Recall@K ──────────────────────────────────────────────────────
+# -- Evaluation: Recall@K ------------------------------------------------------
 # Gold standard: (query, relevant_doc_id)
 EVAL_SET = [
     ("which metric for fraud detection imbalanced data",    "doc_eval"),
@@ -157,7 +157,7 @@ for k in [1, 3, 5]:
 print(f"  MRR:      {mrr():.3f}")
 print()
 
-# ── Sample queries ────────────────────────────────────────────────────────────
+# -- Sample queries ------------------------------------------------------------
 DEMO_QUERIES = [
     "how to reduce variance in an A/B test?",
     "what is the right metric for an imbalanced classifier?",
@@ -174,7 +174,7 @@ for query in DEMO_QUERIES:
         snippet = chunk["text"][:100].replace("\n", " ")
         print(f"  {rank}. [{score:.3f}] [{chunk['doc_id']}] {snippet}...")
 
-# ── Naive vs retrieval-augmented comparison ───────────────────────────────────
+# -- Naive vs retrieval-augmented comparison -----------------------------------
 print("\n" + "-" * 60)
 print("Key insight: retrieval quality bounds RAG quality")
 print("-" * 60)

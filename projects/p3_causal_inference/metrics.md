@@ -1,4 +1,4 @@
-# Project 3 results — true ATE = 3.0
+# Project 3 results - true ATE = 3.0
 
 |                       |   estimate |
 |:----------------------|-----------:|

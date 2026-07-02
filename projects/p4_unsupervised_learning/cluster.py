@@ -1,7 +1,7 @@
 """
-Project 4 — Unsupervised Learning (Clustering + Dimensionality Reduction)
+Project 4 - Unsupervised Learning (Clustering + Dimensionality Reduction)
 =========================================================================
-Dataset : Wine (bundled with scikit-learn) — 178 wines, 13 chemical features,
+Dataset : Wine (bundled with scikit-learn) - 178 wines, 13 chemical features,
           3 true cultivars. We PRETEND we don't know the labels, cluster, then
           check how well the clusters recover the real groups.
 
@@ -46,7 +46,7 @@ ax[1].set(title=f"PCA map coloured by cluster (ARI={ari:.2f})",
 fig.tight_layout(); fig.savefig("clusters.png", dpi=120); plt.close(fig)
 
 with open("metrics.md", "w") as f:
-    f.write(f"# Project 4 — clustering wine (unlabelled)\n\n")
+    f.write(f"# Project 4 - clustering wine (unlabelled)\n\n")
     f.write(f"- Chosen k (max silhouette): **{best_k}**\n")
     f.write(f"- Adjusted Rand Index vs. true cultivars: **{ari:.3f}** "
             "(1.0 = perfect, 0 = random)\n\n")

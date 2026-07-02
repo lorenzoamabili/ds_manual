@@ -1,4 +1,4 @@
-# Project 4 — clustering wine (unlabelled)
+# Project 4 - clustering wine (unlabelled)
 
 - Chosen k (max silhouette): **3**
 - Adjusted Rand Index vs. true cultivars: **0.897** (1.0 = perfect, 0 = random)
