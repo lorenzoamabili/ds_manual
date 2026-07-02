@@ -1,0 +1,48 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest ruff
+
+      - name: Lint
+        run: ruff check src tests
+
+      - name: Test
+        run: pytest -q
+
+      # Offline projects run in CI. P2 (airline data download) and P8 (MovieLens
+      # download) have network dependencies and use seeded synthetic fallbacks
+      # in CI; they still run but may hit the fallback path.
+      - name: Reproduce projects
+        run: |
+          cd projects/p1_supervised_learning     && python train.py
+          cd ../p3_causal_inference              && python causal.py
+          cd ../p4_unsupervised_learning         && python cluster.py
+          cd ../p5_survival_analysis             && python survival.py
+          cd ../p6_fairness_audit                && python fairness.py
+          cd ../p7_anomaly_detection             && python detect.py
+          cd ../p8_recommender                   && python recommend.py
+          cd ../p9_nlp_classification            && python classify.py
+          cd ../../case_study_churn_uplift       && python run.py

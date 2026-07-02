@@ -1,0 +1,181 @@
+<meta charset="utf-8">
+<title>The Confounding Explainer — when a lurking variable flips the story</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f7f5ef; --ink:#1c2321; --muted:#6b736e; --grid:#e2ddd0;
+    --treat:#d5573b;      /* the "treated / high-exposure" hue */
+    --control:#2a7f77;    /* the "control / low-exposure" hue */
+    --naive:#8a5cf6;      /* the pooled, naive line */
+    --line:#1c2321;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Space Grotesk",system-ui,sans-serif;line-height:1.5;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;padding:32px 20px 64px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(28px,5vw,46px);line-height:1.05;margin:.25em 0 .1em;font-weight:700;
+    letter-spacing:-.02em;max-width:16ch}
+  h1 em{font-style:normal;color:var(--treat)}
+  .lede{font-size:18px;max-width:62ch;color:#3a413d;margin:.2em 0 0}
+  .panel{display:grid;grid-template-columns:1.4fr 1fr;gap:28px;margin-top:34px;
+    align-items:start}
+  @media(max-width:760px){.panel{grid-template-columns:1fr}}
+  figure{margin:0;background:#fffdf8;border:1px solid var(--grid);border-radius:4px;
+    padding:10px 6px 4px;box-shadow:0 1px 0 #0000000a}
+  .verdict{border-left:3px solid var(--naive);padding:2px 0 2px 16px;margin:0 0 18px}
+  .verdict .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--naive)}
+  .verdict p{margin:.25em 0 0;font-size:20px;font-weight:500;letter-spacing:-.01em}
+  .controls{font-family:"IBM Plex Mono",monospace;font-size:13px}
+  .controls label{display:block;margin:18px 0 6px;color:var(--muted);letter-spacing:.04em}
+  input[type=range]{width:100%;accent-color:var(--naive);height:22px}
+  .toggles{display:flex;gap:18px;margin-top:16px;flex-wrap:wrap}
+  .toggles label{display:flex;align-items:center;gap:7px;margin:0;color:var(--ink)}
+  .stat{display:flex;justify-content:space-between;font-family:"IBM Plex Mono",monospace;
+    font-size:14px;padding:7px 0;border-bottom:1px dotted var(--grid)}
+  .stat b{font-weight:500}
+  .swatch{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:6px;
+    vertical-align:middle}
+  .pos{color:var(--control)} .neg{color:var(--treat)}
+  .note{font-size:14px;color:var(--muted);max-width:64ch;margin-top:34px;
+    border-top:1px solid var(--grid);padding-top:18px}
+  .note code{font-family:"IBM Plex Mono",monospace;background:#efe9db;padding:1px 5px;
+    border-radius:3px}
+  a{color:var(--treat)}
+  .axis text{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--muted)}
+  .axis line,.axis path{stroke:var(--grid)}
+  .axis-label{font-family:"IBM Plex Mono",monospace;font-size:12px;fill:var(--muted)}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Causal inference · a draggable paradox</div>
+  <h1>One lurking variable can <em>flip</em> the entire story.</h1>
+  <p class="lede">Each point is a customer. Colour marks a hidden group — say, a
+    customer <b>cohort</b> that affects both how much they were exposed to a
+    treatment and their outcome. Inside every group the effect is <span class="pos">positive</span>.
+    Drag the confounder up and watch the <span style="color:var(--naive)">naive line</span> that
+    ignores the group swing <span class="neg">negative</span>. That reversal is exactly
+    why Project&nbsp;3's naive estimate reads &minus;1.5 when the truth is +3.</p>
+
+  <div class="panel">
+    <figure><svg id="plot" viewBox="0 0 560 440" role="img"
+      aria-label="Scatter plot of two colour-coded groups with regression lines"></svg></figure>
+
+    <div>
+      <div class="verdict">
+        <span class="tag" id="verdictTag">naive reading</span>
+        <p id="verdictText">—</p>
+      </div>
+
+      <div class="stat"><span><span class="swatch" style="background:var(--naive)"></span>Naive slope (pooled)</span><b id="sPool">—</b></div>
+      <div class="stat"><span><span class="swatch" style="background:var(--control)"></span>Within group A</span><b id="sA">—</b></div>
+      <div class="stat"><span><span class="swatch" style="background:var(--treat)"></span>Within group B</span><b id="sB">—</b></div>
+
+      <div class="controls">
+        <label for="conf">Confounder strength — how strongly the group shifts both exposure &amp; outcome</label>
+        <input id="conf" type="range" min="0" max="100" value="0" step="1">
+        <div class="toggles">
+          <label><input type="checkbox" id="showNaive" checked> naive line</label>
+          <label><input type="checkbox" id="showGroups" checked> group lines</label>
+          <label><input type="checkbox" id="colorOn" checked> reveal groups</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="note">The "adjustment" methods in
+    <a href="../projects/p3_causal_inference">Project&nbsp;3</a> — regression control,
+    IPW, matching, doubly-robust — are all formal ways of looking <em>within</em> the
+    groups instead of pooling across them. Set <code>reveal groups</code> off to see
+    what a model that never measured the confounder sees: a single misleading trend.
+    The lesson of <a href="../docs/09-causal-inference-and-experimentation.md">doc&nbsp;09</a>
+    in one slider — the estimate you trust depends entirely on what you condition on.</p>
+</div>
+
+<script>
+// ---- deterministic data: fixed latent noise, transformed live by the slider ----
+const N = 130;
+let seed = 42;
+const rand = () => { seed = (seed*1103515245 + 12345) & 0x7fffffff; return seed/0x7fffffff; };
+const gauss = () => Math.sqrt(-2*Math.log(rand()+1e-9))*Math.cos(6.283*rand());
+// Two groups. Within each, true effect of x on y is +0.6 (positive).
+// The group sets a baseline that moves x UP and y DOWN together as confounding grows,
+// which is what bends the pooled line negative.
+const base = [];
+for(let i=0;i<N;i++){
+  const g = i < N/2 ? 0 : 1;
+  base.push({g, nx:gauss()*1.1, ny:gauss()*1.1});
+}
+const TRUE_EFFECT = 0.6;
+
+const svg = d3.select("#plot");
+const W=560,H=440,m={t:18,r:18,b:44,l:44};
+const iw=W-m.l-m.r, ih=H-m.t-m.b;
+const g = svg.append("g").attr("transform",`translate(${m.l},${m.t})`);
+const x = d3.scaleLinear().domain([-4,8]).range([0,iw]);
+const y = d3.scaleLinear().domain([-6,7]).range([ih,0]);
+g.append("g").attr("class","axis").attr("transform",`translate(0,${ih})`).call(d3.axisBottom(x).ticks(6));
+g.append("g").attr("class","axis").call(d3.axisLeft(y).ticks(6));
+g.append("text").attr("class","axis-label").attr("x",iw/2).attr("y",ih+38).attr("text-anchor","middle").text("exposure  x  →");
+g.append("text").attr("class","axis-label").attr("transform","rotate(-90)").attr("x",-ih/2).attr("y",-32).attr("text-anchor","middle").text("outcome  y  →");
+const dotL = g.append("g");
+const lineL = g.append("g");
+
+function ols(pts){ // returns {m,b}
+  const n=pts.length; let sx=0,sy=0,sxx=0,sxy=0;
+  for(const p of pts){sx+=p.x;sy+=p.y;sxx+=p.x*p.x;sxy+=p.x*p.y;}
+  const mm=(n*sxy-sx*sy)/(n*sxx-sx*sx); return {m:mm,b:(sy-mm*sx)/n};
+}
+function seg(fit,cls,col){
+  const x1=x.domain()[0],x2=x.domain()[1];
+  return {x1:x(x1),y1:y(fit.m*x1+fit.b),x2:x(x2),y2:y(fit.m*x2+fit.b),col,cls};
+}
+const fmt = d3.format("+.2f");
+
+function render(){
+  const c = +d3.select("#conf").property("value")/100;   // 0..1 confounder strength
+  const colorOn = d3.select("#colorOn").property("checked");
+  const showNaive = d3.select("#showNaive").property("checked");
+  const showGroups = d3.select("#showGroups").property("checked");
+  // group baselines pull apart with confounding: group A -> low x / high y, B -> high x / low y
+  const pts = base.map(p=>{
+    const gx = p.g===0 ? -2.0*c : 4.0*c;      // exposure shifts by group
+    const gy = p.g===0 ?  3.2*c : -3.4*c;     // outcome baseline shifts oppositely
+    const xx = 2 + gx + p.nx;
+    const yy = 1 + gy + TRUE_EFFECT*(xx) + p.ny*1.0 - TRUE_EFFECT*2;
+    return {x:xx,y:yy,g:p.g};
+  });
+  dotL.selectAll("circle").data(pts).join("circle")
+    .attr("cx",d=>x(d.x)).attr("cy",d=>y(d.y)).attr("r",3.6)
+    .attr("fill",d=> colorOn ? (d.g===0?"var(--control)":"var(--treat)") : "#9aa19c")
+    .attr("opacity",.85);
+
+  const fitAll=ols(pts), fitA=ols(pts.filter(p=>p.g===0)), fitB=ols(pts.filter(p=>p.g===1));
+  const lines=[];
+  if(showNaive) lines.push(seg(fitAll,"naive","var(--naive)"));
+  if(showGroups && colorOn){ lines.push(seg(fitA,"gA","var(--control)")); lines.push(seg(fitB,"gB","var(--treat)")); }
+  lineL.selectAll("line").data(lines).join("line")
+    .attr("x1",d=>d.x1).attr("y1",d=>d.y1).attr("x2",d=>d.x2).attr("y2",d=>d.y2)
+    .attr("stroke",d=>d.col).attr("stroke-width",d=>d.cls==="naive"?3.5:2.2)
+    .attr("stroke-dasharray",d=>d.cls==="naive"?"7 5":null).attr("stroke-linecap","round");
+
+  d3.select("#sPool").text(fmt(fitAll.m)).attr("class", fitAll.m>=0?"pos":"neg");
+  d3.select("#sA").text(fmt(fitA.m)).attr("class","pos");
+  d3.select("#sB").text(fmt(fitB.m)).attr("class","pos");
+
+  const flipped = fitAll.m < 0;
+  d3.select("#verdictText").html(flipped
+    ? 'The pooled line now says exposure <b class="neg">lowers</b> the outcome — the opposite of the truth inside every group.'
+    : 'The pooled line agrees with the groups… for now. Push the confounder higher.');
+  d3.select("#verdictTag").text(flipped ? "paradox: sign reversed" : "naive reading");
+}
+["conf","showNaive","showGroups","colorOn"].forEach(id=>
+  d3.select("#"+id).on("input",render));
+render();
+</script>

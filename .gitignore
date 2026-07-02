@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+.venv/
+*.egg-info/
+.DS_Store
+# Keep the small verified figures tracked so the repo renders on GitHub;
+# regenerated locally by `make projects`.
