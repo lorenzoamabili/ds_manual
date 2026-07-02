@@ -98,6 +98,7 @@ nav:
     - 40 · Mobility & Logistics: 40-mobility-logistics.md
     - 41 · Climate & Environment: 41-climate-environment.md
     - 42 · GovTech & Public Sector: 42-govtech-public.md
+  - Notebooks: notebooks.md
   - Case Studies:
     - Overview: case_studies/index.md
     - Product Analytics — Netflix, Spotify, Duolingo: case_studies/cs-product-analytics.md
