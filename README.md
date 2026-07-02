@@ -32,7 +32,7 @@ does the same on every push across Python 3.10 and 3.12.
 |---------|--------------|
 | `make test` | Unit tests for the shared `dsmanual` package + a leakage guard |
 | `make lint` | `ruff` static checks |
-| `make projects` | Run P1–P6 (writes metrics + figures) |
+| `make projects` | Run P1–P9 (writes metrics + figures) |
 | `make case-study` | Run the churn + uplift case study |
 
 ---
@@ -103,6 +103,10 @@ industries.
 | [36](docs/36-energy.md) | Energy & Utilities | Load forecasting, grid anomalies |
 | [37](docs/37-cybersecurity.md) | Cybersecurity | Intrusion detection, UEBA, anomaly |
 | [38](docs/38-hrtech.md) | HRTech / People Analytics | Attrition, pay equity, workforce planning |
+| [39](docs/39-gaming-media.md) | Gaming & Media | Player churn, matchmaking, LTV, toxicity |
+| [40](docs/40-mobility-logistics.md) | Mobility & Logistics | ETA, VRP routing, surge pricing |
+| [41](docs/41-climate-environment.md) | Climate & Environment | Air quality, species modelling, emissions |
+| [42](docs/42-govtech-public.md) | GovTech & Public Sector | Policy evaluation (RDD), fraud, fairness |
 
 ---
 
@@ -124,6 +128,7 @@ practice beginners get wrong*.
 | P7 | Anomaly detection | Accuracy is 99.5% and catches zero fraud — use PR-AUC | Synthetic (seeded, 0.5% fraud rate) |
 | P8 | Recommender system | RMSE hides popularity bias; evaluate coverage + precision@K | MovieLens 100K |
 | P9 | NLP classification | TF-IDF + logistic regression beats Naive Bayes; beat the linear baseline first | 20 Newsgroups (4 categories) |
+| P10 | Optimisation | Predictions → actions under constraints; LP/MILP/assignment | Synthetic (scipy/PuLP) |
 | — | **Case study** | Target uplift, not risk; model → decision → £ | Simulated pilot RCT |
 
 ---

@@ -27,6 +27,7 @@ projects: ## Run all projects (writes metrics + figures)
 	cd projects/p7_anomaly_detection       && $(PY) detect.py
 	cd projects/p8_recommender             && $(PY) recommend.py
 	cd projects/p9_nlp_classification      && $(PY) classify.py
+	cd projects/p10_optimization           && $(PY) optimize.py
 
 case-study: ## Run the end-to-end churn + uplift case study
 	cd case_study_churn_uplift && $(PY) run.py

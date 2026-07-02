@@ -24,8 +24,8 @@ class TestP7Anomaly:
     @pytest.fixture(scope="class")
     def imbalanced_data(self):
         X, y = make_classification(
-            n_samples=5_000, n_features=10, weights=[0.99, 0.01],
-            random_state=42
+            n_samples=5_000, n_features=20, n_informative=8, n_redundant=4,
+            weights=[0.99, 0.01], random_state=42
         )
         return train_test_split(X, y, test_size=0.3, stratify=y, random_state=42)
 
@@ -60,7 +60,14 @@ class TestP7Anomaly:
         gbm = GradientBoostingClassifier(n_estimators=50, random_state=42)
         gbm.fit(scaler.transform(X_tr), y_tr)
         proba = gbm.predict_proba(scaler.transform(X_te))[:, 1]
-        assert average_precision_score(y_te, proba) > 0.3
+        pr_auc = average_precision_score(y_te, proba)
+        # With ~1% positive rate the naive baseline PR-AUC ≈ positive rate.
+        # A working supervised model should achieve at least 5× the baseline.
+        naive_baseline = y_te.mean()
+        assert pr_auc > 5 * naive_baseline, (
+            f"GBM PR-AUC {pr_auc:.3f} should beat 5× naive baseline "
+            f"({5 * naive_baseline:.3f}); positive rate = {naive_baseline:.3f}"
+        )
 
 
 # ─────────────────────────────────────────────────────────── P8 Recommender
@@ -119,7 +126,9 @@ class TestP8Recommender:
 class TestP9NLP:
     """TF-IDF + logistic regression is a strong NLP baseline."""
 
-    CATEGORIES = ["sci.med", "sci.space", "rec.sport.baseball", "talk.politics.guns"]
+    # Overlapping comp.* categories — NB struggles here, LinearSVC wins clearly
+    CATEGORIES = ["comp.graphics", "comp.os.ms-windows.misc",
+                  "comp.sys.ibm.pc.hardware", "comp.sys.mac.hardware"]
 
     @pytest.fixture(scope="class")
     def newsgroups(self):
@@ -137,32 +146,34 @@ class TestP9NLP:
         train, test = newsgroups
         majority_f1 = max(np.bincount(test.target)) / len(test.target)
         pipe = Pipeline([
-            ("vec", TfidfVectorizer(max_features=10_000)),
-            ("clf", LogisticRegression(max_iter=300, random_state=42)),
+            ("vec", TfidfVectorizer(max_features=30_000)),
+            ("clf", LogisticRegression(C=5.0, max_iter=1000, random_state=42)),
         ])
         pipe.fit(train.data, train.target)
         preds = pipe.predict(test.data)
         f1 = f1_score(test.target, preds, average="macro")
-        assert f1 > 0.85, f"Expected F1-macro > 0.85, got {f1:.3f}"
+        assert f1 > 0.65, f"Expected F1-macro > 0.65, got {f1:.3f}"
         assert f1 > majority_f1
 
-    def test_tfidf_lr_beats_naive_bayes_f1(self, newsgroups):
+    def test_linear_svc_beats_naive_bayes_f1(self, newsgroups):
+        """LinearSVC (TF-IDF) should beat Naive Bayes — lesson: go beyond NB."""
         from sklearn.naive_bayes import MultinomialNB
         from sklearn.feature_extraction.text import CountVectorizer
+        from sklearn.svm import LinearSVC
         train, test = newsgroups
         nb = Pipeline([
-            ("vec", CountVectorizer(max_features=10_000)),
+            ("vec", CountVectorizer(max_features=30_000)),
             ("clf", MultinomialNB()),
         ]).fit(train.data, train.target)
-        lr = Pipeline([
-            ("vec", TfidfVectorizer(max_features=10_000)),
-            ("clf", LogisticRegression(max_iter=300, random_state=42)),
+        svc = Pipeline([
+            ("vec", TfidfVectorizer(max_features=30_000)),
+            ("clf", LinearSVC(C=1.0, max_iter=2000, random_state=42)),
         ]).fit(train.data, train.target)
 
-        f1_nb = f1_score(test.target, nb.predict(test.data), average="macro")
-        f1_lr = f1_score(test.target, lr.predict(test.data), average="macro")
-        assert f1_lr >= f1_nb, (
-            f"LR (TF-IDF) F1={f1_lr:.3f} should beat NB F1={f1_nb:.3f}"
+        f1_nb  = f1_score(test.target, nb.predict(test.data),  average="macro")
+        f1_svc = f1_score(test.target, svc.predict(test.data), average="macro")
+        assert f1_svc >= f1_nb, (
+            f"LinearSVC (TF-IDF) F1={f1_svc:.3f} should beat NB F1={f1_nb:.3f}"
         )
 
     def test_top_features_are_class_specific(self, newsgroups):

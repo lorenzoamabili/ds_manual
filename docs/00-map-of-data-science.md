@@ -108,3 +108,7 @@ industry.
 | [36](36-energy.md) | Energy & Utilities | Load forecasting, renewable intermittency, meter anomaly |
 | [37](37-cybersecurity.md) | Cybersecurity | Intrusion detection, UEBA, phishing, log anomaly |
 | [38](38-hrtech.md) | HRTech / People Analytics | Attrition, hiring, pay equity, workforce planning |
+| [39](39-gaming-media.md) | Gaming & Media | Player churn, matchmaking, LTV, toxicity, dynamic difficulty |
+| [40](40-mobility-logistics.md) | Mobility & Logistics | ETA prediction, VRP, surge pricing, demand heatmaps |
+| [41](41-climate-environment.md) | Climate & Environment | Air quality, species distribution, deforestation, ESG |
+| [42](42-govtech-public.md) | GovTech & Public Sector | Fraud, policy evaluation (RDD/DiD), social care risk |
