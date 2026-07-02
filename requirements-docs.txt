@@ -1,0 +1,4 @@
+# Dependencies for building the MkDocs site (Netlify build)
+mkdocs>=1.6
+mkdocs-material>=9.5
+mkdocs-minify-plugin>=0.8

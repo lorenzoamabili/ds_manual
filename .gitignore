@@ -8,3 +8,4 @@ __pycache__/
 .DS_Store
 # Keep the small verified figures tracked so the repo renders on GitHub;
 # regenerated locally by `make projects`.
+site/

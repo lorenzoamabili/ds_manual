@@ -1,0 +1,110 @@
+site_name: Applied Data Science Manual
+site_description: A structured, opinionated DS reference with runnable Python examples — portfolio and personal knowledge base.
+site_author: Lorenzo Amabili
+repo_url: https://github.com/lorenzoamabili/ds_manual
+repo_name: lorenzoamabili/ds_manual
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  font:
+    text: Inter
+    code: JetBrains Mono
+
+plugins:
+  - search
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Map of Data Science: 00-map-of-data-science.md
+  - Foundations:
+    - 01 · Lifecycle & Reproducibility: 01-lifecycle-and-reproducibility.md
+    - 02 · Statistics That Matter: 02-statistics-that-matter.md
+    - 03 · Data & Feature Engineering: 03-data-and-feature-engineering.md
+    - 04 · Evaluation & Validation: 04-evaluation-and-validation.md
+  - Methods:
+    - 05 · Supervised Learning: 05-supervised-learning.md
+    - 06 · Unsupervised Learning: 06-unsupervised-learning.md
+    - 07 · Time-Series Forecasting: 07-time-series-forecasting.md
+    - 08 · Recommendation Systems: 08-recommendation-systems.md
+    - 09 · Causal Inference & Experimentation: 09-causal-inference-and-experimentation.md
+    - 10 · NLP & LLMs: 10-nlp-and-llms.md
+    - 11 · Computer Vision: 11-computer-vision.md
+    - 12 · Optimisation: 12-optimization.md
+    - 13 · Anomaly Detection: 13-anomaly-detection.md
+    - 16 · Survival Analysis: 16-survival-analysis.md
+    - 17 · Advanced Experimentation: 17-experimentation-advanced.md
+    - 20 · Bayesian & Probabilistic: 20-bayesian-and-probabilistic.md
+    - 21 · Graph & Network Analysis: 21-graph-and-network-analysis.md
+    - 22 · Geospatial: 22-geospatial.md
+  - Production & Responsibility:
+    - 14 · MLOps & Productionisation: 14-mlops-and-productionization.md
+    - 15 · Communication & Visualisation: 15-communication-and-visualization.md
+    - 18 · SQL & Data Engineering: 18-sql-and-data-engineering.md
+    - 19 · Responsible AI & Fairness: 19-responsible-ai-and-fairness.md
+  - Domain Guides:
+    - 30 · Product Analytics: 30-product-analytics.md
+    - 31 · FinTech: 31-fintech.md
+    - 32 · Retail & E-commerce: 32-retail-ecommerce.md
+    - 33 · HealthTech: 33-healthtech.md
+    - 34 · Manufacturing: 34-manufacturing.md
+    - 35 · MarTech: 35-martech.md
+    - 36 · Energy & Utilities: 36-energy.md
+    - 37 · Cybersecurity: 37-cybersecurity.md
+    - 38 · HRTech: 38-hrtech.md
+  - Case Studies:
+    - Overview: case_studies/index.md
+    - Product Analytics — Netflix, Spotify, Duolingo: case_studies/cs-product-analytics.md
+    - FinTech — PayPal, Stripe, Monzo: case_studies/cs-fintech.md
+    - Retail — Amazon, Walmart, Instacart: case_studies/cs-retail.md
+    - HealthTech — Google, NHS, Sepsis: case_studies/cs-healthtech.md
+    - Manufacturing — Siemens, GE, BMW: case_studies/cs-manufacturing.md
+    - MarTech — Airbnb, Booking.com, LinkedIn: case_studies/cs-martech.md
+    - Energy — DeepMind, Ørsted, Tesla: case_studies/cs-energy.md
+    - Cybersecurity — Darktrace, Cloudflare, Okta: case_studies/cs-cybersecurity.md
+    - HRTech — Google, IBM, LinkedIn: case_studies/cs-hrtech.md
+    - Cross-domain — Causal Inference at Scale: case_studies/cs-causal.md
+    - Cross-domain — NLP in Production: case_studies/cs-nlp.md
+    - Cross-domain — Forecasting at Scale: case_studies/cs-forecasting.md
