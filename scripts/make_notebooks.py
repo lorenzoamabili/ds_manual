@@ -35,9 +35,58 @@ def md(source: str) -> dict:
             "source": textwrap.dedent(source).strip()}
 
 
-def code(source: str) -> dict:
+SETUP_CELL = """\
+%matplotlib inline
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import warnings
+warnings.filterwarnings("ignore")
+
+# High-quality plot defaults
+mpl.rcParams.update({
+    "figure.dpi":        120,
+    "figure.figsize":    (10, 5),
+    "axes.spines.top":   False,
+    "axes.spines.right": False,
+    "axes.grid":         True,
+    "grid.alpha":        0.3,
+    "axes.titlesize":    13,
+    "axes.labelsize":    11,
+    "xtick.labelsize":   10,
+    "ytick.labelsize":   10,
+    "legend.fontsize":   10,
+    "font.family":       "sans-serif",
+    "lines.linewidth":   2.0,
+    "patch.edgecolor":   "none",
+})
+PALETTE = ["#2563EB", "#DC2626", "#16A34A", "#D97706", "#7C3AED", "#0891B2"]
+print("Setup complete - plots will render inline with high-quality defaults")
+"""
+
+
+def notebook_prep(source: str) -> str:
+    """Strip headless backend; replace savefig with show for inline display."""
+    lines = []
+    for line in source.splitlines():
+        # Remove Agg backend (headless - suppresses inline display)
+        if re.search(r'matplotlib\.use\(["\']Agg["\']\)', line):
+            continue
+        # Replace savefig(...) with plt.show() so plots appear inline
+        if re.search(r'plt\.savefig\(', line):
+            indent = len(line) - len(line.lstrip())
+            lines.append(" " * indent + "plt.tight_layout()")
+            lines.append(" " * indent + "plt.show()")
+            continue
+        lines.append(line)
+    return "\n".join(lines)
+
+
+def code(source: str, prep: bool = False) -> dict:
+    src = textwrap.dedent(source).strip()
+    if prep:
+        src = notebook_prep(src)
     return {"cell_type": "code", "metadata": {}, "execution_count": None,
-            "outputs": [], "source": textwrap.dedent(source).strip()}
+            "outputs": [], "source": src}
 
 
 def save(path: Path, notebook: dict) -> None:
@@ -304,19 +353,22 @@ def project_notebook(proj_dir: Path, meta: dict) -> dict:
     # Title + lesson
     cells.append(md(f"# {meta['title']}\n{meta['lesson']}"))
 
+    # Notebook setup cell: inline plots + style defaults
+    cells.append(md("## Setup"))
+    cells.append(code(SETUP_CELL))
+
     # Preamble (docstring + imports) — strip module docstring, keep imports
     preamble_code = re.sub(r'^"""[\s\S]*?"""', "", preamble).strip()
     if preamble_code:
-        cells.append(md("## Setup\n\nImport libraries and set global constants."))
-        cells.append(code(preamble_code))
+        cells.append(md("### Imports and constants"))
+        cells.append(code(preamble_code, prep=True))
 
     # Each section
     for header, body in sections:
         if header:
-            # Convert ALL-CAPS section header to title case
             title = header.title().replace("_", " ")
             cells.append(md(f"## {title}"))
-        cells.append(code(body))
+        cells.append(code(body, prep=True))
 
     return nb(cells)
 
@@ -331,16 +383,18 @@ def case_study_notebook(cs_dir: Path, meta: dict) -> dict:
     preamble, sections = split_sections(src)
 
     cells = [md(f"# {meta['title']}\n{meta['lesson']}")]
+    cells.append(md("## Setup"))
+    cells.append(code(SETUP_CELL))
 
     preamble_code = re.sub(r'^"""[\s\S]*?"""', "", preamble).strip()
     if preamble_code:
-        cells.append(md("## Setup"))
-        cells.append(code(preamble_code))
+        cells.append(md("### Imports and constants"))
+        cells.append(code(preamble_code, prep=True))
 
     for header, body in sections:
         if header:
             cells.append(md(f"## {header.title()}"))
-        cells.append(code(body))
+        cells.append(code(body, prep=True))
 
     return nb(cells)
 
@@ -841,7 +895,9 @@ def main():
         save(cs_dir / "notebook.ipynb", nb_cs)
 
     print("\nGenerating topic notebooks...")
-    make_topic_notebooks()
+    import subprocess, sys
+    subprocess.run([sys.executable,
+                    str(ROOT / "scripts" / "make_topic_notebooks.py")], check=True)
 
     print("\nDone.")
 
