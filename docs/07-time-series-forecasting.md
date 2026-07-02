@@ -10,7 +10,7 @@ Decompose into **trend + seasonality + residual**. If seasonal swings *grow with
 the level*, the structure is **multiplicative** (use a log transform or a
 multiplicative model) — the airline series in P2 is the textbook case. Check for:
 
-- **Stationarity** — do mean/variance drift? Many classical models need a
+- **Stationarity** — do mean/variance [drift](14-mlops-and-productionization.md)? Many classical models need a
   stationary series; differencing (subtracting the previous value) often achieves
   it. Test with ADF/KPSS, but the plot usually tells you.
 - **Autocorrelation** — ACF/PACF plots reveal how the series relates to its own
@@ -24,7 +24,7 @@ multiplicative model) — the airline series in P2 is the textbook case. Check f
 | **Exponential smoothing (ETS / Holt-Winters)** | Clear trend + seasonality, one series, want a robust default. *Won P2.* |
 | **ARIMA / SARIMA** | Autocorrelated series; you want interpretable structure and intervals |
 | **Prophet** | Business series with holidays, multiple seasonalities, missing data, analyst-friendly knobs |
-| **Gradient boosting on lag features** | Many related series, exogenous regressors, non-linear effects; competition-grade |
+| **[Gradient boosting](05-supervised-learning.md) on lag features** | Many related series, exogenous regressors, non-linear effects; competition-grade |
 | **Deep models (N-BEATS, DeepAR, TFT)** | Many long series, rich covariates, and you have the data + engineering to justify them |
 
 Reality check: on a *single* clean seasonal series, ETS/SARIMA usually beat fancy
@@ -46,11 +46,11 @@ ML. ML wins when you have **many** series and **exogenous features**.
 - **MASE** — error relative to the naive baseline; comparable across series and
   the most honest single number. <1 means you beat naive.
 
-## Feature engineering for ML forecasting
+## [Feature engineering](03-data-and-feature-engineering.md) for ML forecasting
 Lags (t-1, t-7, t-12…), rolling means/std, calendar features (day-of-week,
 month, holiday flags), and exogenous drivers (price, weather, promotions). The
 craft is in choosing lags that respect what's *knowable* at forecast time — a lag
-shorter than your horizon is leakage.
+shorter than your horizon is [leakage](03-data-and-feature-engineering.md).
 
 ---
 

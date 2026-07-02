@@ -34,7 +34,7 @@ The posterior is rarely available in closed form, so:
 - **Variational inference (ADVI)** — approximates the posterior with optimisation;
   much faster, scales to big data, at the cost of some accuracy.
 - **Conjugate/analytic** — for simple models (Beta-Binomial, Normal-Normal) the
-  posterior is exact and instant — the basis of Bayesian A/B testing.
+  posterior is exact and instant — the basis of Bayesian [A/B testing](09-causal-inference-and-experimentation.md).
 
 Always run **diagnostics**: R-hat ≈ 1, sufficient effective sample size, no
 divergences, and **posterior predictive checks** (does data simulated from the
@@ -58,7 +58,7 @@ interface to PyMC.
 
 ## The trade-off, honestly
 Bayesian models are more work to specify, slower to fit, and demand more statistical
-care than `model.fit()`. The payoff is calibrated uncertainty, graceful handling of
+care than `model.fit()`. The payoff is [calibrated](04-evaluation-and-validation.md) uncertainty, graceful handling of
 small/structured data, and the ability to encode knowledge. Use it where those
 matter; reach for boosting when you just need a fast, accurate point prediction on
 lots of tabular data.
@@ -134,5 +134,5 @@ print("\nPlot saved: posterior distributions show the uncertainty around each ra
 ## Cross-references
 
 - [09](09-causal-inference-and-experimentation.md) — A/B testing foundations
-- [17](17-experimentation-advanced.md) — sequential testing and bandits
+- [17](17-experimentation-advanced.md) — [sequential testing](17-experimentation-advanced.md) and bandits
 - [35](35-martech.md) — Bayesian MMM for marketing mix

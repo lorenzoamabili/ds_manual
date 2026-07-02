@@ -4,21 +4,21 @@
 
 | Problem | Approach |
 |---------|----------|
-| Benefit fraud detection | Classification, anomaly detection (see [13](13-anomaly-detection.md)) |
+| Benefit fraud detection | Classification, [anomaly detection](13-anomaly-detection.md) (see [13](13-anomaly-detection.md)) |
 | Tax gap estimation | Regression, stratified sampling |
-| Social care risk scoring | Survival analysis, classification — high ethical stakes |
-| Policy impact evaluation | Causal inference: DiD, RDD, IV (see [09](09-causal-inference-and-experimentation.md)) |
-| Public health surveillance | Anomaly detection on syndromic data, spatial clustering |
-| Smart city traffic | Spatial-temporal forecasting (see [07](07-time-series-forecasting.md), [22](22-geospatial.md)) |
+| Social care risk scoring | [Survival analysis](16-survival-analysis.md), classification — high ethical stakes |
+| Policy impact evaluation | [Causal inference](09-causal-inference-and-experimentation.md): DiD, RDD, IV (see [09](09-causal-inference-and-experimentation.md)) |
+| Public health surveillance | Anomaly detection on syndromic data, spatial [clustering](06-unsupervised-learning.md) |
+| Smart city traffic | Spatial-temporal [forecasting](07-time-series-forecasting.md) (see [07](07-time-series-forecasting.md), [22](22-geospatial.md)) |
 | Document processing (benefits, planning) | NLP + document classification (see [10](10-nlp-and-llms.md)) |
-| Electoral boundary analysis | Geospatial clustering (see [22](22-geospatial.md)) |
+| Electoral boundary analysis | [Geospatial](22-geospatial.md) clustering (see [22](22-geospatial.md)) |
 
 ## Domain characteristics
 
-- **Highest-stakes fairness requirements**: government decisions affect citizens' rights (benefits, housing, custody). Disparate impact is a legal issue, not just an ethical one. See [19](19-responsible-ai-and-fairness.md).
+- **Highest-stakes fairness requirements**: government decisions affect citizens' rights (benefits, housing, custody). [Disparate impact](19-responsible-ai-and-fairness.md) is a legal issue, not just an ethical one. See [19](19-responsible-ai-and-fairness.md).
 - **Administrative data quality**: government data is often collected for administrative, not analytical, purposes. Missing not at random is endemic (people who don't engage with services have sparse records).
 - **Right to explanation**: GDPR Article 22 and UK AI Act require explainability for automated decisions affecting individuals. Black-box models face regulatory barriers.
-- **Procurement and transparency constraints**: public sector ML must often be auditable by third parties. Open-source, documented, reproducible pipelines matter more than marginal accuracy gains.
+- **Procurement and transparency constraints**: public sector ML must often be auditable by third parties. Open-source, documented, [reproducible](01-lifecycle-and-reproducibility.md) pipelines matter more than marginal accuracy gains.
 - **Long policy cycles**: interventions take years to evaluate. Short-term proxy metrics (application rates, processing times) are necessary but risk Goodhart effects.
 
 ## Causal policy evaluation: Regression Discontinuity Design

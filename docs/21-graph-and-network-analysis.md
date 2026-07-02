@@ -31,7 +31,7 @@ resilience/bottleneck analysis, and organisational-network insight.
   interactions.) From simple heuristics (common neighbours, Adamic-Adar) to
   embeddings.
 - **Node classification** — label nodes using their features *and* their neighbours'
-  (fraud/bot detection, where fraudsters cluster).
+  (fraud/bot detection, where fraudsters [cluster](06-unsupervised-learning.md)).
 - **Graph classification** — a label for a whole graph (molecule toxicity).
 
 ## Embeddings & Graph Neural Networks
@@ -61,7 +61,7 @@ resilience/bottleneck analysis, and organisational-network insight.
   10M-node graph (approximate it).
 - Define the graph deliberately — what is a node, what is an edge, is it directed/
   weighted? The modelling choice dominates the result.
-- Beware temporal leakage: for link prediction, split by *time*, not random edges.
+- Beware [temporal leakage](03-data-and-feature-engineering.md): for link prediction, split by *time*, not random edges.
 
 ---
 

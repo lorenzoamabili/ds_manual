@@ -9,13 +9,13 @@
 
 Finance was an early adopter of statistical modelling (actuarial science predates
 ML by a century), so the domain has mature expectations: models must be
-**explainable** (regulators demand it), **calibrated** (a predicted 2% default
+**explainable** (regulators demand it), **[calibrated](04-evaluation-and-validation.md)** (a predicted 2% default
 rate must actually produce ~2% defaults), and **auditable** (model risk management
 is a legal requirement in banking under SR 11-7 and BCBS 239).
 
 The data is rich but dirty: transaction logs, credit bureau files, market tick data,
-alternative data (mobile metadata, web browsing). Class imbalance is extreme in
-fraud (< 0.1% positive rate). Temporal leakage is the most common modelling error —
+alternative data (mobile metadata, web browsing). [Class imbalance](05-supervised-learning.md) is extreme in
+fraud (< 0.1% positive rate). [Temporal leakage](03-data-and-feature-engineering.md) is the most common modelling error —
 using features that would not be available at prediction time.
 
 Three things distinguish a finance-literate data scientist from a generic one:
@@ -30,10 +30,10 @@ constraints** (GDPR, FCRA, EU AI Act all restrict what features you can use).
 
 | Problem | Formulation | Typical model |
 |---------|-------------|---------------|
-| Fraud detection | Binary classification; extreme imbalance | XGBoost + threshold tuning; Isolation Forest |
-| Credit scoring | PD (probability of default) estimation | Logistic regression (scorecard), GBM |
+| Fraud detection | Binary classification; extreme imbalance | [XGBoost](05-supervised-learning.md) + threshold tuning; [Isolation Forest](13-anomaly-detection.md) |
+| Credit scoring | PD (probability of default) estimation | [Logistic regression](05-supervised-learning.md) (scorecard), GBM |
 | Credit limit / pricing | Regression or policy optimisation | GLM, causal uplift |
-| Churn (banking) | Which customers will close accounts? | Survival analysis, classification |
+| Churn (banking) | Which customers will close accounts? | [Survival analysis](16-survival-analysis.md), classification |
 | Market risk | VaR, expected shortfall | Historical simulation, GARCH |
 | Algorithmic trading | Signal generation + execution | Time series + optimisation (NOT covered here) |
 | AML / transaction monitoring | Flag suspicious sequences | Graph anomaly, sequence models |
@@ -53,14 +53,14 @@ specific input value.
 **Pitfall:** WoE binning must happen *inside* the CV fold. Binning on the full
 dataset and then cross-validating is leakage — a common mistake in tutorial code.
 
-### 2. Gradient boosting for fraud
+### 2. [Gradient boosting](05-supervised-learning.md) for fraud
 
-GBMs (XGBoost, LightGBM) dominate fraud because they handle the non-linear
+GBMs (XGBoost, [LightGBM](05-supervised-learning.md)) dominate fraud because they handle the non-linear
 feature interactions that characterise fraud rings (amount × merchant category ×
-time-of-day patterns). Use PR-AUC as the primary metric, not AUC-ROC — with
+time-of-day patterns). Use [PR-AUC](04-evaluation-and-validation.md) as the primary metric, not AUC-ROC — with
 extreme imbalance, ROC is misleadingly optimistic.
 
-**Pitfall:** transaction-level fraud data has user-level clustering. Split by
+**Pitfall:** transaction-level fraud data has user-level [clustering](06-unsupervised-learning.md). Split by
 **user**, not by transaction, to avoid leakage where train and test share
 transactions from the same fraudster.
 
@@ -71,13 +71,13 @@ If the actual fraud rate among those transactions is 40%, the model is
 miscalibrated. Use Platt scaling or isotonic regression post-hoc. Evaluate with
 a calibration plot (predicted vs. actual probability in deciles).
 
-### 4. Temporal cross-validation
+### 4. Temporal [cross-validation](04-evaluation-and-validation.md)
 
-Financial models degrade over time (concept drift). Always evaluate with a
+Financial models degrade over time ([concept drift](14-mlops-and-productionization.md)). Always evaluate with a
 **walk-forward** (expanding window) or **rolling-window** backtest. A single
 random train/test split on historical data overstates real performance.
 
-### 5. SHAP for explainability
+### 5. [SHAP](05-supervised-learning.md) for explainability
 
 Regulators (and customers) can ask "why was my loan denied?" SHAP values give a
 per-prediction, additive decomposition of the model output. For scorecards,
@@ -100,7 +100,7 @@ explanation method.
   transaction-time blocking, and an offline model (slower, richer features) for
   post-hoc review. They serve different latency budgets.
 - **PR-AUC, not accuracy.** With 0.1% fraud rate, a model that predicts "never
-  fraud" gets 99.9% accuracy. Meaningless. Use precision-recall.
+  fraud" gets 99.9% accuracy. Meaningless. Use [precision-recall](04-evaluation-and-validation.md).
 - **Champion/challenger.** Production models should always have a logged baseline
   (champion) and a challenger getting a small traffic slice. Never deploy blind.
 

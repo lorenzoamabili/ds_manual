@@ -7,13 +7,13 @@
 
 ## Why data science here
 
-Manufacturing generates enormous volumes of time-series sensor data (vibration,
+Manufacturing generates enormous volumes of [time-series](07-time-series-forecasting.md) sensor data (vibration,
 temperature, pressure, current draw) from equipment that is expensive to repair
 and catastrophic to fail. The canonical problem is **predictive maintenance (PdM)**:
 predict failure before it happens so maintenance can be scheduled during planned
 downtime rather than as an emergency.
 
-The domain is characterised by: (1) **extreme class imbalance** — equipment fails
+The domain is characterised by: (1) **extreme [class imbalance](05-supervised-learning.md)** — equipment fails
 rarely, so failure events are a tiny fraction of sensor records; (2) **temporal
 structure** — a single machine observation is useless; patterns of degradation
 unfold over days or weeks; (3) **operational context** — the same vibration reading
@@ -30,18 +30,18 @@ Industry 4.0 adds computer vision (surface defect detection), digital twins
 
 | Problem | Formulation | Typical approach |
 |---------|-------------|------------------|
-| Predictive maintenance | Will this machine fail in the next N hours? | Binary classification on rolling features; survival analysis |
+| Predictive maintenance | Will this machine fail in the next N hours? | Binary classification on rolling features; [survival analysis](16-survival-analysis.md) |
 | Remaining useful life (RUL) | How many cycles until failure? | Regression; LSTM on sensor sequences |
-| Anomaly detection | Is this sensor reading abnormal? | Isolation Forest, OCSVM, autoencoders |
-| Quality control | Is this product defective? | Computer vision (CNN); statistical process control |
-| Process optimisation | What settings minimise defect rate? | Bayesian optimisation; DoE |
-| Root cause analysis | Why did batch X fail? | SHAP, decision trees on process logs |
+| [Anomaly detection](13-anomaly-detection.md) | Is this sensor reading abnormal? | [Isolation Forest](13-anomaly-detection.md), OCSVM, autoencoders |
+| Quality control | Is this product defective? | Computer vision ([CNN](11-computer-vision.md)); statistical process control |
+| Process optimisation | What settings minimise defect rate? | [Bayesian](20-bayesian-and-probabilistic.md) optimisation; DoE |
+| Root cause analysis | Why did batch X fail? | [SHAP](05-supervised-learning.md), decision trees on process logs |
 
 ---
 
 ## Key techniques
 
-### 1. Feature engineering from time series
+### 1. [Feature engineering](03-data-and-feature-engineering.md) from time series
 
 Raw sensor readings are rarely predictive by themselves. Standard features:
 - **Rolling statistics**: mean, std, min, max over N-cycle windows
@@ -83,7 +83,7 @@ sensors are important.
 
 CNNs trained on images of products (welds, castings, PCBs) detect surface defects
 at speeds impossible for human inspection. Key challenge: labelled defect images
-are rare. Use data augmentation, transfer learning from ImageNet, and anomaly
+are rare. Use [data augmentation](11-computer-vision.md), [transfer learning](11-computer-vision.md) from ImageNet, and anomaly
 detection (no defect images only) when labels are scarce.
 
 ---
@@ -96,7 +96,7 @@ detection (no defect images only) when labels are scarce.
 - **Don't evaluate on the last readings before failure.** Test-set performance
   is only meaningful if the model is evaluated at realistic prediction horizons
   (e.g., "predict 7 days ahead"), not immediately before the event.
-- **Operating mode is a confounder.** Control for load, speed, and temperature
+- **Operating mode is a [confounder](09-causal-inference-and-experimentation.md).** Control for load, speed, and temperature
   setpoint before declaring an anomaly.
 - **Start with visualisation.** Plot sensor trends aligned to failure events. Often
   one sensor clearly degrades; a visual confirms before modelling.

@@ -1,7 +1,7 @@
 # 14 · MLOps & Productionisation
 
 A model in a notebook creates zero value. MLOps is the engineering discipline that
-turns a model into a reliable, monitored, reproducible service — and it's often
+turns a model into a reliable, monitored, [reproducible](01-lifecycle-and-reproducibility.md) service — and it's often
 what separates a data scientist who ships from one who prototypes.
 
 ## The lifecycle beyond training
@@ -48,7 +48,7 @@ A deployed model degrades silently. Monitor:
 - **Shadow deployment** — run the new model alongside the old on live traffic
   *without* acting on it; compare before switching.
 - **Canary / gradual rollout** — send a small % of traffic to the new model first.
-- **A/B test the model** — the ultimate check that the new model improves the
+- **[A/B test](09-causal-inference-and-experimentation.md) the model** — the ultimate check that the new model improves the
   *business* metric, not just offline accuracy
   ([09](09-causal-inference-and-experimentation.md)).
 - **Rollback plan** — always be able to revert to the previous version instantly.

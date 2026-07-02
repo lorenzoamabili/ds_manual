@@ -31,9 +31,9 @@ EDA is not "make lots of plots." It is a series of questions:
   without discarding.
 - **Categoricals.** One-hot for low cardinality; **target/mean encoding** for high
   cardinality — but target encoding *leaks the target* unless done inside
-  cross-validation folds. This is a classic trap.
+  [cross-validation](04-evaluation-and-validation.md) folds. This is a classic trap.
 - **Scaling.** Required for distance- and gradient-based methods (SVM, k-NN,
-  k-means, neural nets, regularised linear). Irrelevant for tree ensembles.
+  [k-means](06-unsupervised-learning.md), neural nets, regularised linear). Irrelevant for tree ensembles.
 
 ## Feature engineering — the highest-leverage work
 
@@ -171,4 +171,4 @@ print("Plot saved.")
 
 - [P1](../projects/p1_supervised_learning) — canonical no-leakage Pipeline demo
 - [04](04-evaluation-and-validation.md) — the shuffle-label leakage guard
-- [18](18-sql-and-data-engineering.md) — SQL for data prep (fan-out, grain bugs)
+- [18](18-sql-and-data-engineering.md) — SQL for data prep ([fan-out](18-sql-and-data-engineering.md), grain bugs)

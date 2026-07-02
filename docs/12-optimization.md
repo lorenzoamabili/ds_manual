@@ -2,7 +2,7 @@
 
 Prediction tells you what *will* happen; optimisation tells you what to *do* about
 it. The two together are where data science creates operational value —
-forecasting demand is nice, but *deciding inventory/staffing/routing* given that
+[forecasting](07-time-series-forecasting.md) demand is nice, but *deciding inventory/staffing/routing* given that
 forecast is the deliverable.
 
 ## Problem types

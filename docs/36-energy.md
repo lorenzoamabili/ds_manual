@@ -1,6 +1,6 @@
 # 36 · Energy & Utilities
 
-> Forecasting demand, detecting grid anomalies, and optimising dispatch in one of
+> [Forecasting](07-time-series-forecasting.md) demand, detecting grid anomalies, and optimising dispatch in one of
 > the most consequential and data-rich physical systems on earth.
 
 ---
@@ -30,13 +30,13 @@ supply-demand balance.
 
 | Problem | Formulation | Typical approach |
 |---------|-------------|------------------|
-| Short-term load forecasting | Predict demand next 24–48h | SARIMA, gradient boosting on calendar + weather |
+| Short-term load forecasting | Predict demand next 24–48h | SARIMA, [gradient boosting](05-supervised-learning.md) on calendar + weather |
 | Long-term load forecasting | Predict demand next 1–5 years | Regression on economic indicators + demographics |
-| Renewable generation forecasting | Predict solar/wind output | NWP-based models, GBM, CNN on NWP grids |
-| Demand anomaly detection | Is this meter reading fraudulent/faulty? | Isolation Forest, STL + control limits |
+| Renewable generation forecasting | Predict solar/wind output | NWP-based models, GBM, [CNN](11-computer-vision.md) on NWP grids |
+| Demand [anomaly detection](13-anomaly-detection.md) | Is this meter reading fraudulent/faulty? | [Isolation Forest](13-anomaly-detection.md), STL + control limits |
 | Energy theft detection | Is this customer under-reporting? | Classification on consumption patterns |
 | Price forecasting | What will the spot price be tomorrow? | Time series + market features |
-| Grid fault detection | Is this transformer about to fail? | Anomaly detection on SCADA |
+| Grid fault detection | Is this [transformer](10-nlp-and-llms.md) about to fail? | Anomaly detection on SCADA |
 
 ---
 
@@ -44,7 +44,7 @@ supply-demand balance.
 
 ### 1. Short-term load forecasting (STLF)
 
-Electricity demand has strong daily, weekly, and annual seasonality, plus
+Electricity demand has strong daily, weekly, and annual [seasonality](07-time-series-forecasting.md), plus
 weather sensitivity (heating degree days, cooling degree days). The dominant
 approach: gradient boosting with calendar features (hour, weekday, month,
 holiday) and lagged demand (t-24h, t-48h, same day last week).
@@ -70,7 +70,7 @@ by GBM on large datasets but fast to prototype.
 ### 4. Anomaly detection on meter data
 
 Smart meter data contains zeros (outages), step changes (meter tampering),
-and drift (meter ageing). STL residual + 3σ control limits is a simple first
+and [drift](14-mlops-and-productionization.md) (meter ageing). STL residual + 3σ control limits is a simple first
 pass. Isolation Forest handles multivariate meter clusters.
 
 ---

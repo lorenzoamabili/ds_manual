@@ -13,7 +13,7 @@ There is no single "fair." The main group-fairness criteria:
 | **Demographic parity** | selection rate across groups | Outcomes *should* be equal by policy (representation) |
 | **Equal opportunity** | true-positive rate across groups | Missing a qualified person is the key harm |
 | **Equalised odds** | TPR *and* FPR across groups | Both error types matter across groups |
-| **Calibration** | predicted probs mean the same per group | Scores are used as probabilities |
+| **[Calibration](04-evaluation-and-validation.md)** | predicted probs mean the same per group | Scores are used as probabilities |
 
 **An impossibility result:** except in degenerate cases you cannot satisfy
 calibration *and* equalised odds simultaneously when base rates differ. So fairness
@@ -47,7 +47,7 @@ group. Fairness must be *measured on outcomes*, not assumed from feature lists.
   group-based decisions in some jurisdictions).
 
 ## Beyond fairness: the wider responsible-AI surface
-- **Transparency & explainability** — SHAP/counterfactuals, and **model cards** +
+- **Transparency & explainability** — [SHAP](05-supervised-learning.md)/counterfactuals, and **model cards** +
   **datasheets for datasets** documenting intended use, training data, evaluation
   by subgroup, and limitations. (This repo ships cards for its models — see
   [`cards/`](../cards).)
@@ -55,7 +55,7 @@ group. Fairness must be *measured on outcomes*, not assumed from feature lists.
   is easy), differential privacy for strong guarantees, federated learning to avoid
   centralising raw data.
 - **Robustness & security** — distribution shift, adversarial examples, data
-  poisoning, and prompt injection for LLM systems.
+  poisoning, and prompt injection for [LLM](10-nlp-and-llms.md) systems.
 - **Accountability** — human-in-the-loop for high-stakes decisions, audit trails,
   the right to contest an automated decision, and a named owner.
 

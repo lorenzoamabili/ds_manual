@@ -12,10 +12,10 @@ me."
 | Domain | Signature problems | Dominant functions |
 |--------|--------------------|--------------------|
 | **MarTech / marketing** | Segmentation, attribution, campaign lift, churn | Causal/experimentation, recommenders, classification |
-| **FinTech** | Fraud, credit scoring, risk, pricing, algo trading | Classification, anomaly detection, time series |
-| **Retail / e-commerce** | Demand forecasting, pricing, basket analysis | Forecasting, recommenders, optimisation |
+| **FinTech** | Fraud, credit scoring, risk, pricing, algo trading | Classification, [anomaly detection](13-anomaly-detection.md), time series |
+| **Retail / e-commerce** | Demand [forecasting](07-time-series-forecasting.md), pricing, basket analysis | Forecasting, recommenders, optimisation |
 | **Manufacturing (Industry 4.0)** | Predictive maintenance, quality control, digital twins | Time series, anomaly detection, computer vision |
-| **HealthTech / clinical** | Risk prediction, imaging, genomics, trial analysis | Classification, CV, causal inference, survival analysis |
+| **HealthTech / clinical** | Risk prediction, imaging, genomics, trial analysis | Classification, CV, [causal inference](09-causal-inference-and-experimentation.md), [survival analysis](16-survival-analysis.md) |
 | **Mobility / logistics** | Routing, fleet, ETA, autonomous perception | Optimisation, forecasting, CV/RL |
 | **Energy / utilities** | Load forecasting, grid balancing, maintenance | Forecasting, optimisation, anomaly detection |
 | **Product analytics (SaaS)** | Funnels, retention, experimentation, feature impact | Causal/experimentation, forecasting, classification |
@@ -81,7 +81,7 @@ A practical heuristic, in priority order:
    durable, undersupplied skill. If you like squeezing signal from messy sensors,
    forecasting/anomaly detection.
 2. **Pair it with a domain you have credibility in.** Domain knowledge is a moat;
-   it is what lets you spot the leakage nobody else sees.
+   it is what lets you spot the [leakage](03-data-and-feature-engineering.md) nobody else sees.
 3. **Stay literate everywhere else.** The 20% of each other function that you can
    learn in a week covers 80% of conversations.
 
@@ -99,8 +99,8 @@ industry.
 
 | Doc | Domain | Signature problems |
 |-----|--------|--------------------|
-| [30](30-product-analytics.md) | Product Analytics (SaaS / big tech) | Funnels, retention cohorts, A/B testing, DAU |
-| [31](31-fintech.md) | FinTech | Fraud detection, credit scoring, risk, calibration |
+| [30](30-product-analytics.md) | Product Analytics (SaaS / big tech) | Funnels, retention cohorts, [A/B testing](09-causal-inference-and-experimentation.md), DAU |
+| [31](31-fintech.md) | FinTech | Fraud detection, credit scoring, risk, [calibration](04-evaluation-and-validation.md) |
 | [32](32-retail-ecommerce.md) | Retail / E-commerce | Demand forecasting, market basket, RFM |
 | [33](33-healthtech.md) | HealthTech / Clinical | Risk prediction, readmission, clinical trial analysis |
 | [34](34-manufacturing.md) | Manufacturing / Industry 4.0 | Predictive maintenance, RUL, anomaly in sensors |

@@ -31,7 +31,7 @@ inspection, autonomous systems, document processing.
 - **Data augmentation** — flips, crops, colour jitter, rotation (only those that
   preserve the label — don't flip a "6" into a "9", don't mirror an X-ray if
   laterality matters). This is often the highest-leverage lever.
-- **Data quality > model choice.** Label noise, class imbalance, and distribution
+- **Data quality > model choice.** Label noise, [class imbalance](05-supervised-learning.md), and distribution
   shift between your training images and deployment cameras sink more CV projects
   than architecture ever does.
 - **Watch for shortcut learning.** The classic failure: the model learns the
@@ -40,7 +40,7 @@ inspection, autonomous systems, document processing.
   data from a *different* source/site.
 - **Evaluation** — accuracy for balanced classification; **mAP** (mean average
   precision) for detection; **IoU / Dice** for segmentation. Split so the same
-  patient/scene/site never spans train and test (group leakage is rampant in CV).
+  patient/scene/site never spans train and test (group [leakage](03-data-and-feature-engineering.md) is rampant in CV).
 
 ## Practical stack
 `torchvision` / `timm` for backbones, `ultralytics` for YOLO, `segmentation-models`
@@ -158,4 +158,4 @@ print("features before the new head learns a sensible gradient direction.")
 
 - [34](34-manufacturing.md) — visual quality control in manufacturing
 - [33](33-healthtech.md) — medical imaging (X-ray, pathology)
-- [03](03-data-and-feature-engineering.md) — data augmentation is feature engineering
+- [03](03-data-and-feature-engineering.md) — data augmentation is [feature engineering](03-data-and-feature-engineering.md)

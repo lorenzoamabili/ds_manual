@@ -30,9 +30,9 @@ else.
 - **Spatial autocorrelation** — "everything is related to everything, but near things
   more so" (Tobler's first law). Nearby observations are *not* independent, so naive
   standard errors are too optimistic. Measure it (Moran's I) and account for it.
-- **Spatial leakage** — a random train/test split puts neighbouring, correlated
-  points on both sides, inflating scores. Use **spatial cross-validation** (hold out
-  whole regions/blocks), the geospatial analogue of time-series CV.
+- **Spatial [leakage](03-data-and-feature-engineering.md)** — a random train/test split puts neighbouring, correlated
+  points on both sides, inflating scores. Use **spatial [cross-validation](04-evaluation-and-validation.md)** (hold out
+  whole regions/blocks), the geospatial analogue of [time-series](07-time-series-forecasting.md) CV.
 - **Modifiable Areal Unit Problem (MAUP)** — results change with the choice of
   boundaries/aggregation level; conclusions can be an artefact of the zoning.
 
@@ -43,9 +43,9 @@ else.
 - **Spatial regression** — spatial lag / spatial error models, or geographically
   weighted regression (GWR) for effects that vary across space.
 - **ML with spatial features** — coordinates, distances-to-features, neighbourhood
-  aggregates, H3-cell statistics; gradient boosting on these is a strong practical
+  aggregates, H3-cell statistics; [gradient boosting](05-supervised-learning.md) on these is a strong practical
   baseline. For imagery, CNNs on raster tiles.
-- **Routing & optimisation** — shortest path, isochrones, and vehicle routing sit at
+- **Routing & optimisation** — shortest path, isochrones, and [vehicle routing](12-optimization.md) sit at
   the border with [optimisation](12-optimization.md).
 
 ## Tools

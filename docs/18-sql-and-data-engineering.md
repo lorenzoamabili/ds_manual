@@ -38,7 +38,7 @@ The industry moved from ETL to **ELT**: load raw data into the warehouse first,
 then transform in-warehouse with SQL.
 
 - **Warehouses / engines** — Snowflake, BigQuery, Redshift, Databricks; columnar,
-  massively parallel. Understand partitioning and clustering (they make or break
+  massively parallel. Understand partitioning and [clustering](06-unsupervised-learning.md) (they make or break
   query cost/speed).
 - **dbt** — transformations as version-controlled, tested, documented SQL models
   with dependency graphs. It brought software engineering (tests, CI, lineage,
@@ -138,6 +138,6 @@ print(f"\nRule: aggregate to the target grain BEFORE joining.")
 
 ## Cross-references
 
-- [03](03-data-and-feature-engineering.md) — feature engineering (including lag features from SQL)
-- [01](01-lifecycle-and-reproducibility.md) — data versioning and pipeline reproducibility
+- [03](03-data-and-feature-engineering.md) — [feature engineering](03-data-and-feature-engineering.md) (including lag features from SQL)
+- [01](01-lifecycle-and-reproducibility.md) — data versioning and pipeline [reproducibility](01-lifecycle-and-reproducibility.md)
 - [14](14-mlops-and-productionization.md) — feature stores and training/serving skew

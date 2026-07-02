@@ -11,11 +11,11 @@ are still the right choice for many jobs.
 | 1 | **Rules / regex / keyword** | Structured extraction, small closed problems; a strong, debuggable baseline |
 | 2 | **Bag-of-words / TF-IDF + linear model** | Text classification with decent labelled data; fast, interpretable, hard to beat on narrow tasks |
 | 3 | **Classical embeddings (word2vec, GloVe, fastText)** | Semantic similarity when you can't afford transformers |
-| 4 | **Transformer encoders (BERT family, fine-tuned)** | Classification/NER/QA needing real language understanding; you have labels + GPUs |
-| 5 | **Sentence embeddings (SBERT) + vector search** | Semantic search, clustering, dedup, retrieval |
+| 4 | **Transformer encoders (BERT family, [fine-tuned](11-computer-vision.md))** | Classification/NER/QA needing real language understanding; you have labels + GPUs |
+| 5 | **Sentence embeddings (SBERT) + vector search** | Semantic search, [clustering](06-unsupervised-learning.md), dedup, retrieval |
 | 6 | **LLMs (prompted or fine-tuned)** | Generation, summarisation, extraction, zero/few-shot on tasks without training data |
 
-**Don't jump to rung 6 by default.** A TF-IDF + logistic regression model that you
+**Don't jump to rung 6 by default.** A TF-IDF + [logistic regression](05-supervised-learning.md) model that you
 can retrain in seconds and explain to a regulator often beats an LLM for
 production classification on cost, latency, and reliability.
 
@@ -50,7 +50,7 @@ for rungs 1–3; transformers largely handle it internally.
 - **Bias & toxicity** — models inherit their training data's biases; test for them.
 - **Cost & latency** — a per-call LLM in a high-throughput loop is an expensive
   design; cache, batch, or distil.
-- **Label leakage in classic pipelines** — fit TF-IDF/vectorisers on training folds
+- **Label [leakage](03-data-and-feature-engineering.md) in classic pipelines** — fit TF-IDF/vectorisers on training folds
   only, like any other transform ([03](03-data-and-feature-engineering.md)).
 
 ---

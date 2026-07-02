@@ -4,14 +4,14 @@
 
 | Problem | Approach |
 |---------|----------|
-| ETA prediction | Gradient boosting + routing API, survival models |
-| Demand forecasting (ride-hail, delivery) | Spatial-temporal models, DeepAR (see [07](07-time-series-forecasting.md)) |
-| Route optimisation | Vehicle routing problem (VRP), OR-Tools (see [12](12-optimization.md)) |
+| ETA prediction | [Gradient boosting](05-supervised-learning.md) + routing API, survival models |
+| Demand [forecasting](07-time-series-forecasting.md) (ride-hail, delivery) | Spatial-temporal models, [DeepAR](07-time-series-forecasting.md) (see [07](07-time-series-forecasting.md)) |
+| Route optimisation | [Vehicle routing](12-optimization.md) problem (VRP), OR-Tools (see [12](12-optimization.md)) |
 | Dynamic pricing / surge | Causal elasticity estimation (see [09](09-causal-inference-and-experimentation.md)) |
 | Driver/courier allocation | Assignment optimisation, bandit algorithms |
-| Anomaly detection (fleet) | Isolation Forest, time-series anomaly (see [13](13-anomaly-detection.md)) |
-| Churn of drivers/couriers | Survival analysis (see [16](16-survival-analysis.md)) |
-| Geospatial demand heatmaps | H3 spatial aggregation, kriging (see [22](22-geospatial.md)) |
+| [Anomaly detection](13-anomaly-detection.md) (fleet) | [Isolation Forest](13-anomaly-detection.md), [time-series](07-time-series-forecasting.md) anomaly (see [13](13-anomaly-detection.md)) |
+| Churn of drivers/couriers | [Survival analysis](16-survival-analysis.md) (see [16](16-survival-analysis.md)) |
+| [Geospatial](22-geospatial.md) demand heatmaps | [H3](22-geospatial.md) spatial aggregation, kriging (see [22](22-geospatial.md)) |
 
 ## Domain characteristics
 

@@ -9,8 +9,8 @@
 
 Retail generates some of the richest transactional data outside of finance: every
 scan, click, basket, return, and delivery event is logged. The business problems
-map cleanly onto core DS functions — demand forecasting, recommenders, pricing
-optimisation, and clustering — which is why retail has been an ML testbed since
+map cleanly onto core DS functions — demand [forecasting](07-time-series-forecasting.md), recommenders, pricing
+optimisation, and [clustering](06-unsupervised-learning.md) — which is why retail has been an ML testbed since
 the Walmart / beer-and-diapers era.
 
 The hard part is not the models — it is the **operational coupling**. A demand
@@ -29,14 +29,14 @@ almost never hold.
 
 | Problem | Formulation | Typical approach |
 |---------|-------------|------------------|
-| Demand forecasting | Predict SKU-level sales N weeks ahead | SARIMA, Prophet, LightGBM on lag features |
+| Demand forecasting | Predict SKU-level sales N weeks ahead | SARIMA, Prophet, [LightGBM](05-supervised-learning.md) on lag features |
 | Price optimisation | Set price to maximise revenue or margin | Elasticity modelling, constrained optimisation |
 | Market basket analysis | Which products are bought together? | Association rules (Apriori/FP-Growth) |
-| Customer segmentation | Group customers by value/behaviour | RFM + KMeans |
-| Recommender | Which product to show next? | Collaborative filtering, content-based |
+| Customer segmentation | Group customers by value/behaviour | RFM + [KMeans](06-unsupervised-learning.md) |
+| Recommender | Which product to show next? | [Collaborative filtering](08-recommendation-systems.md), content-based |
 | Markdown optimisation | Clear end-of-season inventory profitably | Dynamic programming, regression |
 | Returns prediction | Will this order be returned? | Binary classification |
-| Supply chain risk | Will this supplier be late? | Classification, survival analysis |
+| Supply chain risk | Will this supplier be late? | Classification, [survival analysis](16-survival-analysis.md) |
 
 ---
 
@@ -61,7 +61,7 @@ bread). Filter by lift > 1 and minimum support to find genuinely informative rul
 Hierarchical time series: forecasts at national level disagree with the sum of
 store-level forecasts. Reconcile with **bottom-up** (sum store forecasts) or
 **top-down** (share national forecast) methods. LightGBM on lag features + calendar
-features often beats ARIMA on large SKU count because it handles cross-SKU
+features often beats [ARIMA](07-time-series-forecasting.md) on large SKU count because it handles cross-SKU
 information and avoids unit-root issues.
 
 **Pitfall:** promotional periods violate stationarity. Either model promotions as

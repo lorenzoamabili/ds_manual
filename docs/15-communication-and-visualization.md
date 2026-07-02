@@ -42,7 +42,7 @@ almost no one wants your chronological journey.
   with counts than percentages.
 - Give ranges, not false precision ("between 8% and 12%", not "10.3%").
 - Be explicit about what you *don't* know and what would change your conclusion.
-  Calibrated humility builds far more credibility than confident certainty that
+  [Calibrated](04-evaluation-and-validation.md) humility builds far more credibility than confident certainty that
   later breaks.
 
 ## Tools
@@ -52,7 +52,7 @@ visualisation; dashboards (Streamlit, Dash, Tableau, Power BI) for
 self-serve monitoring — but a dashboard is not an analysis; it answers questions
 someone already knew to ask, whereas an analysis finds the question.
 
-## The reproducible narrative
+## The [reproducible](01-lifecycle-and-reproducibility.md) narrative
 For a portfolio especially: a result is more persuasive when the reader can see the
 path from raw data to conclusion. A clean notebook or report that interleaves the
 reasoning, the code, and the figures — and that *runs* — demonstrates rigour in a
@@ -183,5 +183,5 @@ print("  4. Trend: annotated event, uncertainty band, BLUF title")
 ## Cross-references
 
 - [04](04-evaluation-and-validation.md) — calibration curves (plot from communication angle)
-- [09](09-causal-inference-and-experimentation.md) — communicating A/B test results honestly
+- [09](09-causal-inference-and-experimentation.md) — communicating [A/B test](09-causal-inference-and-experimentation.md) results honestly
 - [19](19-responsible-ai-and-fairness.md) — charts for subgroup fairness reporting

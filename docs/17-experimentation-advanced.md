@@ -1,4 +1,4 @@
-# 17 · Experimentation — Beyond the Basic A/B Test
+# 17 · Experimentation — Beyond the Basic [A/B Test](09-causal-inference-and-experimentation.md)
 
 [Doc 09](09-causal-inference-and-experimentation.md) covers the foundations of
 randomised experiments. This is the practitioner's layer: the techniques that make
@@ -21,7 +21,7 @@ Experiments are often traffic-limited. Two techniques buy sensitivity for free:
 
 ## Not peeking: valid stopping
 
-The cardinal sin is checking the p-value repeatedly and stopping when it dips below
+The cardinal sin is checking the [p-value](02-statistics-that-matter.md) repeatedly and stopping when it dips below
 0.05 — this inflates false positives dramatically (repeated looks = repeated
 chances to get lucky). Fixes:
 
@@ -44,8 +44,8 @@ chances to get lucky). Fixes:
 
 ## When the simple design breaks
 - **Interference / network effects** — in marketplaces and social products, treating
-  one user affects others (SUTVA violation), biasing naive estimates. Use
-  **cluster randomisation** (randomise cities/markets) or **switchback
+  one user affects others ([SUTVA](09-causal-inference-and-experimentation.md) violation), biasing naive estimates. Use
+  **[cluster](06-unsupervised-learning.md) randomisation** (randomise cities/markets) or **switchback
   experiments** (flip the whole system on/off over time windows) — standard in
   two-sided marketplaces (rideshare, delivery).
 - **Long-term vs. short-term effects** — the metric that moves in week 1 (novelty)

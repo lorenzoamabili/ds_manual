@@ -34,9 +34,9 @@ false positives). In practice, production systems layer both.
 | Malware classification | Which malware family is this binary? | Multi-class classification on PE features |
 | Insider threat | Is this employee behaving abnormally? | User/Entity Behaviour Analytics (UEBA) |
 | Phishing detection | Is this email / URL malicious? | NLP + URL feature classification |
-| Lateral movement | Is this authentication sequence anomalous? | Sequence anomaly, graph analysis |
+| Lateral movement | Is this authentication sequence anomalous? | Sequence anomaly, [graph analysis](21-graph-and-network-analysis.md) |
 | Vulnerability prioritisation | Which CVEs should we patch first? | Regression/ranking on CVSS + exploit availability |
-| Log anomaly detection | Are these log lines indicative of an attack? | Isolation Forest, log parsing + anomaly |
+| Log [anomaly detection](13-anomaly-detection.md) | Are these log lines indicative of an attack? | [Isolation Forest](13-anomaly-detection.md), log parsing + anomaly |
 
 ---
 
@@ -66,7 +66,7 @@ compromised look normal until the exfiltration event. Use peer-group baselines
 ### 3. Graph-based detection
 
 Attacks propagate through networks: a compromised host authenticates to a server,
-which authenticates to a database. Graph features (PageRank, betweenness centrality,
+which authenticates to a database. Graph features (PageRank, [betweenness centrality](21-graph-and-network-analysis.md),
 community membership) on the authentication graph reveal lateral movement patterns
 invisible in individual flow analysis.
 
@@ -79,8 +79,8 @@ features fed to a classifier.
 
 ### 5. Threshold engineering
 
-At sub-1% base rate, any threshold calibration error has enormous impact on alert
-volume. Plot precision-recall at every threshold. Work with analysts to understand
+At sub-1% base rate, any threshold [calibration](04-evaluation-and-validation.md) error has enormous impact on alert
+volume. Plot [precision-recall](04-evaluation-and-validation.md) at every threshold. Work with analysts to understand
 how many alerts per day they can triage, then set the threshold to that volume —
 this is the operational constraint, not an arbitrary 0.5.
 
@@ -99,9 +99,9 @@ this is the operational constraint, not an arbitrary 0.5.
   comes from incident reports, which are incomplete and delayed. Many threat
   hunts produce retroactive labels months later.
 - **Distribution shift is the norm.** Network topology changes, new applications
-  deploy, user behaviour shifts seasonally. Retrain frequently; monitor for drift.
+  deploy, user behaviour shifts seasonally. Retrain frequently; monitor for [drift](14-mlops-and-productionization.md).
 - **Explainability matters for triage.** An analyst can't act on a score of 0.87
-  without context. SHAP values or rule explanations that say "unusually large
+  without context. [SHAP values](05-supervised-learning.md) or rule explanations that say "unusually large
   outbound transfer at 2AM from a host that has never connected to this IP"
   are actionable.
 

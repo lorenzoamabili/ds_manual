@@ -31,8 +31,8 @@ need in 3 years?). All three have significant causal complexity and ethical risk
 | Problem | Formulation | Typical approach |
 |---------|-------------|------------------|
 | Voluntary attrition | Will this employee leave in next 12 months? | Binary classification |
-| Time-to-leave | How long until this employee leaves? | Survival analysis |
-| Engagement risk | Is this team disengaged? | Clustering + survey analysis |
+| Time-to-leave | How long until this employee leaves? | [Survival analysis](16-survival-analysis.md) |
+| Engagement risk | Is this team disengaged? | [Clustering](06-unsupervised-learning.md) + survey analysis |
 | Hiring quality | Will this candidate succeed in 90 days? | Classification on structured interview + assessment data |
 | Promotion prediction | Who is ready for promotion? | Classification (use carefully — bias risk) |
 | Workforce demand | How many software engineers in 2027? | Time series + scenario modelling |
@@ -49,14 +49,14 @@ literature: tenure (U-shaped risk — high in first 2 years and after 5 years),
 time since last promotion, manager change, commute change, pay band vs. market,
 engagement survey score.
 
-**Pitfall:** HR data often has performance ratings that are calibrated per-manager,
+**Pitfall:** HR data often has performance ratings that are [calibrated](04-evaluation-and-validation.md) per-manager,
 not company-wide. A "3 out of 5" from one manager ≠ "3 out of 5" from another.
 Normalise ratings within manager before using as a feature.
 
 ### 2. Survival analysis for time-to-attrition
 
 When "will they leave?" becomes "when will they leave?", use survival analysis.
-Cox proportional hazards gives hazard ratios — interpretable HR-facing outputs
+[Cox proportional hazards](16-survival-analysis.md) gives hazard ratios — interpretable HR-facing outputs
 ("employees without a promotion in 18 months have 2.3× the baseline leaving rate").
 See [16](16-survival-analysis.md).
 
@@ -64,7 +64,7 @@ See [16](16-survival-analysis.md).
 
 Cluster employees or teams on engagement survey dimensions (manager quality,
 workload, career clarity, belonging). Produces actionable segments for HR
-business partners. K-means or GMM on 5-10 survey dimensions. Interpret cluster
+business partners. [K-means](06-unsupervised-learning.md) or GMM on 5-10 survey dimensions. Interpret cluster
 centroids to label segments.
 
 ### 4. Compensation equity analysis
@@ -90,7 +90,7 @@ audits and in some cases regulatory approval.
   qualitative investigation before any HR intervention.
 - **Avoid features that proxy for protected attributes.** Zip code, commute time,
   college name, and gap years can proxy for race, disability, or class. Audit
-  feature importance for disparate impact.
+  feature importance for [disparate impact](19-responsible-ai-and-fairness.md).
 - **Attrition labels are sparse and noisy.** Voluntary vs. involuntary attrition
   need separate models. Layoff periods corrupt the training set.
 - **Privacy by design.** Aggregate to cohorts before surfacing to managers.
@@ -100,7 +100,7 @@ audits and in some cases regulatory approval.
   an actionable retention play is just expensive trivia. Tie every model to a
   decision or experiment.
 - **See [19](19-responsible-ai-and-fairness.md).** Fairness in HR is legally and
-  ethically critical. Run demographic parity, equalised odds, and individual fairness
+  ethically critical. Run [demographic parity](19-responsible-ai-and-fairness.md), [equalised odds](19-responsible-ai-and-fairness.md), and individual fairness
   checks before deployment.
 
 ---
@@ -216,7 +216,7 @@ print("investigate, not as deterministic predictions.")
 
 ## Cross-references
 
-- [05](05-supervised-learning.md) — classification, class imbalance, SHAP
+- [05](05-supervised-learning.md) — classification, [class imbalance](05-supervised-learning.md), [SHAP](05-supervised-learning.md)
 - [16](16-survival-analysis.md) — time-to-attrition with Cox
 - [06](06-unsupervised-learning.md) — team engagement segmentation
 - [19](19-responsible-ai-and-fairness.md) — bias audits for HR models (legal critical)

@@ -6,7 +6,7 @@
 |---------|----------|
 | Emissions estimation | Regression on activity data + emission factors |
 | Deforestation detection | Computer vision on satellite imagery (see [11](11-computer-vision.md)) |
-| Air quality forecasting | Time-series + spatial interpolation (see [07](07-time-series-forecasting.md), [22](22-geospatial.md)) |
+| Air quality [forecasting](07-time-series-forecasting.md) | [Time-series](07-time-series-forecasting.md) + spatial interpolation (see [07](07-time-series-forecasting.md), [22](22-geospatial.md)) |
 | Species distribution modelling | MaxEnt, GLM on geo-referenced presence/absence data |
 | Extreme weather prediction | Deep learning (NeurWeatherFormer, GraphCast) |
 | Carbon credit verification | Satellite + ML for forest biomass estimation |
@@ -16,10 +16,10 @@
 ## Domain characteristics
 
 - **Sparse, noisy ground truth**: environmental sensor networks have gaps; satellite data has cloud cover; species sightings are presence-only (no absence data). Handling missing data and presence-only bias is core.
-- **Spatial autocorrelation is the rule**: nearby measurements are not independent. Standard CV that splits randomly over-estimates performance — use spatial CV (hold out geographic blocks). See [22](22-geospatial.md).
+- **[Spatial autocorrelation](22-geospatial.md) is the rule**: nearby measurements are not independent. Standard CV that splits randomly over-estimates performance — use spatial CV (hold out geographic blocks). See [22](22-geospatial.md).
 - **Long time horizons, slow feedback**: a deforestation alert may take months to verify on the ground. Labelling pipelines are slow.
 - **High stakes, contested data**: emissions data is politically sensitive; satellite-based deforestation estimates are legally consequential. Uncertainty quantification is not optional.
-- **Class imbalance**: rare events (fires, floods, species detections) dominate the value but are sparse in data.
+- **[Class imbalance](05-supervised-learning.md)**: rare events (fires, floods, species detections) dominate the value but are sparse in data.
 
 ## Air quality forecasting
 
@@ -128,5 +128,5 @@ print("Caveat: background ≠ true absence — no-detection may mean unsampled."
 
 - [07](07-time-series-forecasting.md) — climate and weather time series
 - [11](11-computer-vision.md) — satellite imagery, deforestation detection
-- [22](22-geospatial.md) — spatial CV, Moran's I, spatial autocorrelation
+- [22](22-geospatial.md) — spatial CV, [Moran's I](22-geospatial.md), spatial autocorrelation
 - [case studies](case_studies/cs-energy.md) — DeepMind, Ørsted wind power (adjacent domain)

@@ -8,7 +8,7 @@ ideas that come up constantly and that people get subtly wrong.
 ## Estimation & uncertainty
 
 - **A point estimate without an interval is half a result.** Always attach a
-  confidence/credible interval or a standard error.
+  confidence/[credible interval](20-bayesian-and-probabilistic.md) or a standard error.
 - **The bootstrap is your universal tool.** Resample the data with replacement,
   recompute the statistic, repeat 1 000×; the spread of those values *is* your
   sampling distribution. Works when a closed-form SE is hard or the statistic is
@@ -65,7 +65,7 @@ OLS deserves deep understanding because it underlies so much:
   coefficients unbiased but SEs wrong. Fix: HC3 robust standard errors.
 - **Multicollinearity** inflates SEs and makes individual coefficients unstable.
   Detect with VIF (>10 is a problem). Fix: ridge, drop one of correlated pair.
-- **Clustered data** (repeat measurements per patient, store, user) produces
+- **[Clustered](06-unsupervised-learning.md) data** (repeat measurements per patient, store, user) produces
   correlated residuals. Fix: clustered standard errors or mixed-effects model.
 
 ---
@@ -78,7 +78,7 @@ OLS deserves deep understanding because it underlies so much:
   to outliers.
 - **Partial correlation** controls for a third variable — use when you want "X–Y
   correlation holding Z fixed."
-- Correlation in the presence of a confounder is almost always wrong (see
+- Correlation in the presence of a [confounder](09-causal-inference-and-experimentation.md) is almost always wrong (see
   [09](09-causal-inference-and-experimentation.md)).
 
 ---
@@ -172,12 +172,12 @@ print("  - Always plot residuals before trusting a regression")
 
 ---
 
-## Bayesian vs. frequentist, pragmatically
+## [Bayesian](20-bayesian-and-probabilistic.md) vs. frequentist, pragmatically
 
 Don't pick a religion. Use the frame that fits:
 
 - **Frequentist** for well-defined experiments with clear repeated-sampling
-  interpretation (A/B tests, regulated clinical trials).
+  interpretation ([A/B tests](09-causal-inference-and-experimentation.md), regulated clinical trials).
 - **Bayesian** when you have real prior information, small data, or want a direct
   probability statement ("70% chance B beats A") stakeholders actually understand.
   Hierarchical Bayesian models excel at "many small groups" (per-store, per-user).
@@ -188,6 +188,6 @@ See [20](20-bayesian-and-probabilistic.md) for the full Bayesian treatment.
 
 ## The one formula to memorise
 
-**Bayes' theorem in English:** posterior ∝ likelihood × prior. After seeing data,
+**Bayes' theorem in English:** [posterior](20-bayesian-and-probabilistic.md) ∝ likelihood × prior. After seeing data,
 your belief is your prior belief updated by how probable the data is under each
 hypothesis. This is literally what good scientific reasoning should always do.

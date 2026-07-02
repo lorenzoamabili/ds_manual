@@ -16,7 +16,7 @@
 - **New item:** fall back to content features until interactions accumulate.
 - **New user:** use onboarding signals, popularity, or demographic priors, then
   personalise as data arrives.
-- **New system:** you may have to bootstrap with popularity/heuristics before CF is
+- **New system:** you may have to [bootstrap](02-statistics-that-matter.md) with popularity/heuristics before CF is
   viable at all.
 
 ## Evaluating recommenders (offline metrics lie less than you'd hope)
@@ -31,7 +31,7 @@ future interactions from past ones — a random split leaks):
 
 **The offline–online gap is real.** Offline metrics optimise for predicting past
 behaviour; the business cares about *changing future* behaviour. The final arbiter
-is an **online A/B test** ([09](09-causal-inference-and-experimentation.md)) —
+is an **online [A/B test](09-causal-inference-and-experimentation.md)** ([09](09-causal-inference-and-experimentation.md)) —
 and beware feedback loops, where the recommender shapes the very data it's next
 trained on.
 

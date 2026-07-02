@@ -19,7 +19,7 @@ usually can't treat it as ordinary supervised classification.
 | **Local Outlier Factor (LOF)** | Compare a point's local density to its neighbours' | Clusters of varying density |
 | **One-Class SVM** | Learn a boundary around normal data | Small/medium, well-behaved data |
 | **Autoencoders** | Train to reconstruct normal data; high reconstruction error = anomaly | High-dimensional (images, sensor arrays), lots of normal data |
-| **Time-series methods** | Forecast the series; large residual = anomaly; or STL residuals, change-point detection | Monitoring, telemetry, seasonal signals |
+| **[Time-series](07-time-series-forecasting.md) methods** | [Forecast](07-time-series-forecasting.md) the series; large residual = anomaly; or STL residuals, change-point detection | Monitoring, telemetry, seasonal signals |
 
 ## The hard parts
 - **Defining "normal" is the whole game**, and normal drifts. A model trained on
@@ -28,8 +28,8 @@ usually can't treat it as ordinary supervised classification.
   **alert budget** the team can actually investigate, not an arbitrary cutoff. Too
   sensitive → alert fatigue → ignored alerts → worse than nothing.
 - **Evaluation with scarce labels** — when you have *some* labelled anomalies, use
-  **precision@k** (of the top-k flagged, how many are real) and PR-AUC, because
-  ROC-AUC looks flatteringly high when anomalies are <1%.
+  **precision@k** (of the top-k flagged, how many are real) and [PR-AUC](04-evaluation-and-validation.md), because
+  [ROC-AUC](04-evaluation-and-validation.md) looks flatteringly high when anomalies are <1%.
 - **Context matters** — a value can be normal globally but anomalous *for this
   user / this hour / this machine*. Contextual and collective anomalies need
   features that encode the context, or per-entity models.

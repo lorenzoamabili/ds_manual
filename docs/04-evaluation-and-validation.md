@@ -14,8 +14,8 @@ The golden rule: **your validation must mimic how the model will actually be use
 |--------|-------------|---------|
 | **Hold-out split** | Large data, fast iteration | Noisy estimate on small sets; wasteful |
 | **Stratified k-fold CV** | Tabular i.i.d. data, classification | Don't use for time series |
-| **GroupKFold** | Rows cluster into entities (users, patients) | Must define groups carefully |
-| **Rolling-origin CV** | Time series — train on past, test on future | Slow; pick horizon to match deployment |
+| **GroupKFold** | Rows [cluster](06-unsupervised-learning.md) into entities (users, patients) | Must define groups carefully |
+| **[Rolling-origin](07-time-series-forecasting.md) CV** | Time series — train on past, test on future | Slow; pick horizon to match deployment |
 | **Nested CV** | Hyperparameter tuning *and* performance estimation | Computationally expensive but the only unbiased scheme |
 
 **Nested CV explained:** when you tune hyperparameters, the outer loop estimates
@@ -69,7 +69,7 @@ If the probability is used as a probability (risk scores, expected-value decisio
 - Plot **reliability diagram**: x = mean predicted probability in bins, y = actual
   fraction positive. Perfect calibration = diagonal line.
 - Measure with **Brier score** (lower is better) or **Expected Calibration Error (ECE)**.
-- Fix miscalibration: **Platt scaling** (logistic regression on scores) or
+- Fix miscalibration: **Platt scaling** ([logistic regression](05-supervised-learning.md) on scores) or
   **isotonic regression** on a held-out calibration set.
 
 ---
@@ -78,9 +78,9 @@ If the probability is used as a probability (risk scores, expected-value decisio
 
 | Symptom | Cause | Fix |
 |---------|-------|-----|
-| Train score ≈ val score, both poor | High bias (underfitting) | More complex model, more features, less regularisation |
+| Train score ≈ val score, both poor | High bias (underfitting) | More complex model, more features, less [regularisation](05-supervised-learning.md) |
 | Train score >> val score, big gap | High variance (overfitting) | More data, more regularisation, simpler model |
-| Both near perfect but test is poor | Leakage → see [03](03-data-and-feature-engineering.md) | Hunt for the leak |
+| Both near perfect but test is poor | [Leakage](03-data-and-feature-engineering.md) → see [03](03-data-and-feature-engineering.md) | Hunt for the leak |
 
 **Learning curves** (score vs. training-set size) diagnose which problem you have
 and whether more data would help. If val score plateaus before 100% training data,

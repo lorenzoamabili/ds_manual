@@ -11,7 +11,7 @@ Marketing was one of the first business functions to industrialise data science,
 driven by the need to personalise at scale (millions of customers, thousands of
 messages). The domain's signature challenge is **causal attribution**: customers
 interact with many touchpoints before converting, and crediting one channel with
-the sale is inherently a causal inference problem, not a correlation one.
+the sale is inherently a [causal inference](09-causal-inference-and-experimentation.md) problem, not a correlation one.
 
 MarTech sits at the intersection of: (1) **segmentation** (who are my customers?),
 (2) **prediction** (who will churn, convert, or respond?), (3) **causal inference**
@@ -29,9 +29,9 @@ churners (high risk), and the difference is £55k on a simulated pilot.
 
 | Problem | Formulation | Typical approach |
 |---------|-------------|------------------|
-| Customer segmentation | Group customers by behaviour | RFM + KMeans, UMAP + DBSCAN |
+| Customer segmentation | Group customers by behaviour | RFM + [KMeans](06-unsupervised-learning.md), [UMAP](06-unsupervised-learning.md) + DBSCAN |
 | Churn prediction | Who will cancel in the next 30 days? | Binary classification |
-| Campaign uplift | Did the campaign *cause* more sales? | Uplift modelling, A/B test |
+| Campaign uplift | Did the campaign *cause* more sales? | Uplift modelling, [A/B test](09-causal-inference-and-experimentation.md) |
 | Attribution modelling | Which touchpoints drove conversion? | Shapley-value attribution, Markov chains |
 | LTV prediction | How much will this customer spend lifetime? | Pareto/NBD, regression, survival |
 | Next best offer | What product should we show this customer? | Recommendation + contextual bandit |
@@ -44,7 +44,7 @@ churners (high risk), and the difference is £55k on a simulated pilot.
 ### 1. RFM segmentation
 
 Score each customer on Recency, Frequency, Monetary value. Quantile-score each
-dimension (1–5), combine, and cluster. Produces named segments: Champions,
+dimension (1–5), combine, and [cluster](06-unsupervised-learning.md). Produces named segments: Champions,
 Loyal, At-Risk, Hibernating, Lost. Each segment maps to a different CRM action.
 
 **Pitfall:** RFM is backward-looking. It tells you who was valuable, not who will
@@ -81,11 +81,11 @@ corroborating experiments.
 ### 4. Customer lifetime value (CLV)
 
 **Contractual setting** (subscription): CLV = margin × (1 / churn rate) in steady
-state. Model churn with survival analysis.
+state. Model churn with [survival analysis](16-survival-analysis.md).
 
 **Non-contractual setting** (retail): use Pareto/NBD model (purchase count) +
 Gamma-Gamma model (average order value). Or fit ML on historical transaction data
-with appropriate feature construction (no leakage on future aggregates).
+with appropriate feature construction (no [leakage](03-data-and-feature-engineering.md) on future aggregates).
 
 ### 5. A/B testing for campaigns
 
@@ -111,7 +111,7 @@ novelty effects). See [09](09-causal-inference-and-experimentation.md) and
 - **Email metrics are proxy metrics.** Open rate is gameable (bot opens). Click
   rate is better but measures intent, not outcome. Always tie to revenue or
   retention when possible.
-- **Seasonality confounds.** Campaigns run in December will look great because
+- **[Seasonality](07-time-series-forecasting.md) confounds.** Campaigns run in December will look great because
   everyone buys in December. Control for seasonality in uplift measurement.
 
 ---
@@ -232,7 +232,7 @@ print("  High recency + low freq + low monetary  = Hibernating / Lost")
 
 - [06](06-unsupervised-learning.md) — clustering for segmentation
 - [09](09-causal-inference-and-experimentation.md) — A/B testing, uplift, causal inference
-- [17](17-experimentation-advanced.md) — CUPED, sequential testing
+- [17](17-experimentation-advanced.md) — [CUPED](17-experimentation-advanced.md), [sequential testing](17-experimentation-advanced.md)
 - [08](08-recommendation-systems.md) — personalisation and next-best-offer
 - [32](32-retail-ecommerce.md) — overlap with retail analytics
 - [`case_study_churn_uplift/`](../case_study_churn_uplift) — full uplift case study

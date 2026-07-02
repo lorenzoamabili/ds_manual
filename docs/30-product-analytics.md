@@ -13,13 +13,13 @@ whom?** The data is behavioural: clicks, sessions, feature activations, purchase
 support tickets. It is high-volume, dirty, and causally treacherous — most of what
 looks like signal is selection bias.
 
-The domain sits at the intersection of statistics (experimentation), forecasting
-(growth modelling), and causal inference (what drove the change). Unlike FinTech or
+The domain sits at the intersection of statistics (experimentation), [forecasting](07-time-series-forecasting.md)
+(growth modelling), and [causal inference](09-causal-inference-and-experimentation.md) (what drove the change). Unlike FinTech or
 HealthTech, the "label" is rarely external — you define metrics (DAU, retention D7,
 LTV), and the definition of success is itself a modelling choice.
 
 Three failure modes kill most product DS work: (1) metric selection that optimises
-a proxy at the expense of the real goal, (2) launching an A/B test without adequate
+a proxy at the expense of the real goal, (2) launching an [A/B test](09-causal-inference-and-experimentation.md) without adequate
 power, (3) calling a "trend" causal when it is seasonal.
 
 ---
@@ -28,12 +28,12 @@ power, (3) calling a "trend" causal when it is seasonal.
 
 | Problem | Formulation | Typical approach |
 |---------|-------------|------------------|
-| Retention modelling | P(user active at day N \| day-0 cohort) | Cohort survival curves, logistic regression |
-| Feature impact | Did shipping X change retention? | A/B test, diff-in-diff, CUPED |
+| Retention modelling | P(user active at day N \| day-0 cohort) | Cohort survival curves, [logistic regression](05-supervised-learning.md) |
+| Feature impact | Did shipping X change retention? | A/B test, diff-in-diff, [CUPED](17-experimentation-advanced.md) |
 | Funnel drop-off | Where do users abandon the conversion flow? | Funnel analysis, chi-square per step |
 | DAU / growth forecasting | How many users next quarter? | Decomposition + regression, Prophet |
-| Churn prediction | Which users will stop using the product? | Binary classification (LightGBM, LR) |
-| Engagement segmentation | Who are the power users vs. casuals? | Clustering (KMeans, GMM) on behaviour vectors |
+| Churn prediction | Which users will stop using the product? | Binary classification ([LightGBM](05-supervised-learning.md), LR) |
+| Engagement segmentation | Who are the power users vs. casuals? | [Clustering](06-unsupervised-learning.md) ([KMeans](06-unsupervised-learning.md), GMM) on behaviour vectors |
 | Metric sensitivity | Is D7 retention the right north-star? | Correlation analysis vs. LTV |
 
 ---
@@ -63,8 +63,8 @@ flows. Session-replay data often reveals the real path.
 
 Randomise users to control/treatment. Test the primary metric with a two-sample
 t-test or Mann-Whitney (for non-normal outcomes like revenue). Report effect size
-and CI, not just p-value. See [17](17-experimentation-advanced.md) for CUPED,
-sequential testing, and multi-arm bandits.
+and CI, not just [p-value](02-statistics-that-matter.md). See [17](17-experimentation-advanced.md) for CUPED,
+[sequential testing](17-experimentation-advanced.md), and multi-arm bandits.
 
 **Pitfall:** peeking at p-values before the pre-specified sample size is reached
 inflates Type I error. Pre-register stopping criteria.
@@ -96,12 +96,12 @@ or resurrection dropped. Each has a different fix.
 - **Power before you ship.** Run a power calculation (or use a simulation) before
   starting an experiment. Underpowered tests waste weeks and give inconclusive
   results that get interpreted as "no effect."
-- **Novelty effect is real.** New features often spike engagement for 1–2 weeks
+- **[Novelty effect](17-experimentation-advanced.md) is real.** New features often spike engagement for 1–2 weeks
   regardless of real value. Run experiments long enough to let it wash out.
 - **Metric traps.** Optimising for click-through inflates rage-clicks. Optimising
   for session length can trap users in confusion loops. Always pair a primary metric
   with a guardrail metric (e.g., retention AND NPS).
-- **Simpson's paradox in funnels.** An overall conversion improvement can hide a
+- **[Simpson's paradox](09-causal-inference-and-experimentation.md) in funnels.** An overall conversion improvement can hide a
   decline in a key segment if that segment's share changed. Always segment.
 
 ---

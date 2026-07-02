@@ -4,10 +4,10 @@
 
 | Problem | Approach |
 |---------|----------|
-| Player churn prediction | Survival analysis, classification (see [16](16-survival-analysis.md), [05](05-supervised-learning.md)) |
-| Matchmaking (skill-based) | TrueSkill (Bayesian rating), bandit exploration |
-| Monetisation / LTV prediction | Regression, quantile regression, survival models |
-| Content recommendation | Collaborative filtering, contextual bandits (see [08](08-recommendation-systems.md)) |
+| Player churn prediction | [Survival analysis](16-survival-analysis.md), classification (see [16](16-survival-analysis.md), [05](05-supervised-learning.md)) |
+| Matchmaking (skill-based) | TrueSkill ([Bayesian](20-bayesian-and-probabilistic.md) rating), bandit exploration |
+| Monetisation / LTV prediction | Regression, [quantile regression](07-time-series-forecasting.md), survival models |
+| Content recommendation | [Collaborative filtering](08-recommendation-systems.md), contextual bandits (see [08](08-recommendation-systems.md)) |
 | Toxicity / content moderation | NLP classification, human-in-the-loop review (see [10](10-nlp-and-llms.md)) |
 | Dynamic difficulty adjustment | Reinforcement learning, contextual bandits |
 | Ad inventory yield optimisation | Constrained optimisation, auction theory (see [12](12-optimization.md)) |
@@ -16,7 +16,7 @@
 ## Domain characteristics
 
 - **Extremely high event frequency**: user actions arrive at sub-second cadence (clicks, movements, in-game events). Data engineering often dominates modelling time.
-- **Sparse monetisation**: in F2P (free-to-play) games, typically 1-5% of players generate >80% of revenue. Extreme class imbalance in LTV prediction.
+- **Sparse monetisation**: in F2P (free-to-play) games, typically 1-5% of players generate >80% of revenue. Extreme [class imbalance](05-supervised-learning.md) in LTV prediction.
 - **Network effects in matchmaking**: a player's experience depends on who they're matched with — standard i.i.d. ML assumptions break.
 - **Short content cycles**: a game's meta changes with each patch; a model trained before a patch may be obsolete the next day. Rapid retraining pipelines are essential.
 - **Engagement vs. wellbeing tension**: maximising session time can conflict with player wellbeing (addictive design). Responsible ML here requires explicit wellbeing metrics as guardrails.
@@ -102,6 +102,6 @@ print("Production note: route low-confidence predictions to human moderation que
 ## Cross-references
 
 - [08](08-recommendation-systems.md) — content and player recommendations
-- [09](09-causal-inference-and-experimentation.md) — A/B testing game features
+- [09](09-causal-inference-and-experimentation.md) — [A/B testing](09-causal-inference-and-experimentation.md) game features
 - [12](12-optimization.md) — ad yield and resource allocation
 - [case studies](case_studies/cs-product-analytics.md) — Duolingo engagement loop (same domain patterns)

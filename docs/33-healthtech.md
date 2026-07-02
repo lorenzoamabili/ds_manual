@@ -1,6 +1,6 @@
 # 33 · HealthTech & Clinical Data Science
 
-> Applying predictive modelling and causal inference to improve patient outcomes,
+> Applying predictive modelling and [causal inference](09-causal-inference-and-experimentation.md) to improve patient outcomes,
 > accelerate drug discovery, and optimise care delivery.
 
 ---
@@ -9,13 +9,13 @@
 
 Healthcare data is simultaneously the richest and most constrained: EHRs contain
 decades of longitudinal patient histories, but HIPAA, GDPR, and local data
-governance make it expensive to access. The stakes are high — a mis-calibrated
+governance make it expensive to access. The stakes are high — a mis-[calibrated](04-evaluation-and-validation.md)
 sepsis model that fails silently kills people. Regulatory approval (FDA, CE mark)
 is required for anything that influences clinical decisions.
 
-What distinguishes clinical data science from generic ML: (1) **censoring** —
+What distinguishes clinical data science from generic ML: (1) **[censoring](16-survival-analysis.md)** —
 patients are lost to follow-up or the study ends before they have the outcome
-of interest; (2) **confounding by indication** — sicker patients get more
+of interest; (2) **[confounding](09-causal-inference-and-experimentation.md) by indication** — sicker patients get more
 treatment, so naive comparisons always make interventions look ineffective;
 (3) **external validity** — a model trained at one hospital often fails at another
 because clinical coding practices, population demographics, and care protocols
@@ -32,11 +32,11 @@ clinician ordering treatment.
 | Problem | Formulation | Typical approach |
 |---------|-------------|------------------|
 | Readmission risk | Will patient be readmitted within 30 days? | Binary classification (logistic, GBM) |
-| Mortality / deterioration | Risk score in the next N hours | Classification, survival analysis |
-| Treatment effect estimation | Does drug X reduce complications? | RCT analysis, propensity scoring |
+| Mortality / deterioration | Risk score in the next N hours | Classification, [survival analysis](16-survival-analysis.md) |
+| Treatment effect estimation | Does drug X reduce complications? | RCT analysis, [propensity](09-causal-inference-and-experimentation.md) scoring |
 | Length-of-stay prediction | How many bed-days will this patient need? | Regression, count models |
 | Disease progression | How fast will this patient's condition worsen? | Survival / longitudinal modelling |
-| Clinical NLP | Extract diagnoses from free-text notes | NER, BERT-based classifiers |
+| Clinical NLP | Extract diagnoses from free-text notes | NER, [BERT](10-nlp-and-llms.md)-based classifiers |
 | Drug discovery | Which molecules are active against target? | Graph NNs, molecular fingerprints |
 | Genomics | Which variants associate with phenotype? | GWAS, polygenic risk scores |
 
@@ -44,12 +44,12 @@ clinician ordering treatment.
 
 ## Key techniques
 
-### 1. Survival analysis (time-to-event)
+### 1. Survival analysis ([time-to-event](16-survival-analysis.md))
 
 When the outcome is "how long until event X" (death, discharge, relapse) and some
 patients don't have the event by study end (they are **censored**), standard
-regression discards that information. Kaplan-Meier estimates the survival curve
-non-parametrically; Cox proportional hazards models add covariates. See
+regression discards that information. [Kaplan-Meier](16-survival-analysis.md) estimates the survival curve
+non-parametrically; [Cox proportional hazards](16-survival-analysis.md) models add covariates. See
 [16](16-survival-analysis.md) for full treatment.
 
 **Pitfall:** informative censoring — if patients who are improving are more likely
@@ -97,12 +97,12 @@ right is 80% of the implementation work.
   tested at another is not ready for deployment. Distribution shift is the norm.
 - **Missing data is not random.** Clinicians order tests because they're suspicious.
   "No measurement" is often signal. Don't drop rows with missing labs — impute
-  carefully or model the missingness as a feature.
-- **Label leakage is easy in EHR data.** The diagnosis code you're predicting is
+  carefully or model the [missingness](03-data-and-feature-engineering.md) as a feature.
+- **Label [leakage](03-data-and-feature-engineering.md) is easy in EHR data.** The diagnosis code you're predicting is
   often recorded before the outcome you're trying to predict (admission → ICD coding
   happens retrospectively). Use only data available at the time of prediction.
 - **Ethics and fairness.** Models trained on historical care data encode historical
-  disparities (race, sex, SES). Audit for disparate impact before deployment.
+  disparities (race, sex, SES). Audit for [disparate impact](19-responsible-ai-and-fairness.md) before deployment.
   See [19](19-responsible-ai-and-fairness.md).
 
 ---

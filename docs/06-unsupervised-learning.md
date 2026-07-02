@@ -46,7 +46,7 @@ segments are interpretable and actionable.
 | **t-SNE** | 2-D visualisation of high-dim data | Distances between clusters are NOT meaningful; don't feed to models |
 | **UMAP** | Visualisation + preserves more global structure | Better speed/quality than t-SNE; still for visualisation |
 | **Autoencoders** | Non-linear compression of images/text | Needs data + GPU; overkill for tabular |
-| **SVD / Truncated SVD** | Sparse matrices (text, recommenders) | Same idea as PCA without centring |
+| **[SVD](08-recommendation-systems.md) / Truncated SVD** | Sparse matrices (text, recommenders) | Same idea as PCA without centring |
 
 **The warning about t-SNE/UMAP:** they are for *seeing*, not measuring. The
 apparent size and spacing of blobs are artefacts of algorithm parameters, not the
@@ -58,12 +58,12 @@ an interpretation.
 
 ---
 
-## Topic modelling (unsupervised NLP)
+## [Topic modelling](10-nlp-and-llms.md) (unsupervised NLP)
 
 For text data, **Latent Dirichlet Allocation (LDA)** finds latent topics as
 distributions over words. Each document is a mixture of topics; each topic is a
 mixture of words. Output: top words per topic. Interpretation requires domain
-knowledge. BERTopic (transformer embeddings + clustering) is the modern default.
+knowledge. BERTopic ([transformer](10-nlp-and-llms.md) embeddings + clustering) is the modern default.
 
 ---
 
@@ -71,7 +71,7 @@ knowledge. BERTopic (transformer embeddings + clustering) is the modern default.
 
 - **Customer segmentation** — cluster on behaviour, profile each segment, run
   targeted campaigns ([35](35-martech.md), [32](32-retail-ecommerce.md))
-- **Anomaly detection** — density/distance methods flag outliers ([13](13-anomaly-detection.md))
+- **[Anomaly detection](13-anomaly-detection.md)** — density/distance methods flag outliers ([13](13-anomaly-detection.md))
 - **Feature compression** — PCA as a preprocessing step reduces noise before supervised modelling
 - **Exploration** — a UMAP map is often the fastest way to *see* structure before investing in modelling
 - **Recommenders** — SVD factorises the user-item matrix ([08](08-recommendation-systems.md), [P8](../projects/p8_recommender))

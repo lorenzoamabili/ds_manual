@@ -10,12 +10,12 @@ and making the whole thing reproducible. This is where credibility is won or los
    population. *The most common failure is solving a well-specified version of the
    wrong problem.*
 2. **Data understanding** — Where does each column come from, and *when* is it
-   known? A feature that is only available *after* the outcome is leakage waiting
+   known? A feature that is only available *after* the outcome is [leakage](03-data-and-feature-engineering.md) waiting
    to happen (see [03](03-data-and-feature-engineering.md)).
-3. **Data preparation** — Cleaning, joining, feature engineering. Usually the
+3. **Data preparation** — Cleaning, joining, [feature engineering](03-data-and-feature-engineering.md). Usually the
    largest time sink. Everything here must be expressible as a transform that can
    be re-run on new data.
-4. **Modelling** — Start with a baseline (mean, last value, logistic regression).
+4. **Modelling** — Start with a baseline (mean, last value, [logistic regression](05-supervised-learning.md)).
    Complex models earn their place only by beating it.
 5. **Evaluation** — Against the *baseline* and the *business metric*, on data the
    model has never seen, with a validation scheme that matches deployment
@@ -55,7 +55,7 @@ once in an order you can't reconstruct.
 - [ ] **Data is versioned**, or at minimum hashed/dated so "which data?" is answerable.
 - [ ] **One command reproduces the result** from raw data to figure.
 - [ ] **Config over hard-coding** — paths, hyperparameters, and thresholds in one place.
-- [ ] **Experiment tracking** — params, metrics, and artefacts logged (MLflow,
+- [ ] **[Experiment tracking](14-mlops-and-productionization.md)** — params, metrics, and artefacts logged (MLflow,
       Weights & Biases). "Which run produced this number?" should never be a mystery.
 - [ ] **Environment captured** — a container or `environment.yml`, so "works on my
       machine" becomes "works in the image."
@@ -128,4 +128,4 @@ print("  [x] No notebook-only magic — this script is importable and re-runnabl
 
 - [03](03-data-and-feature-engineering.md) — leakage (the reproducibility failure mode)
 - [04](04-evaluation-and-validation.md) — honest evaluation schemes
-- [14](14-mlops-and-productionization.md) — MLOps: taking reproducibility to production
+- [14](14-mlops-and-productionization.md) — [MLOps](14-mlops-and-productionization.md): taking reproducibility to production

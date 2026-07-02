@@ -25,7 +25,7 @@ difference in means is unbiased. Getting A/B tests right in practice:
   power (usually 80%); compute n *before* launching. Peeking early and stopping on
   significance inflates false positives massively.
 - **Randomisation unit = analysis unit.** Randomise by user, analyse by user. If
-  you randomise by user but measure per-session, your SEs are wrong (clustered).
+  you randomise by user but measure per-session, your SEs are wrong ([clustered](06-unsupervised-learning.md)).
 - **One metric to rule it (OEC).** Pre-register the primary metric; treat the rest
   as guardrails/diagnostics to avoid the multiple-comparisons trap
   ([02](02-statistics-that-matter.md)).
@@ -72,7 +72,7 @@ from ~0.4 to <0.03. Balance diagnostics are exactly what reviewers scrutinise.
 - **Draw the DAG.** A causal graph forces you to state what you believe causes
   what, and reveals which variables to adjust for — and which to *not* (never
   condition on a collider or a mediator you don't intend to block).
-- **Estimate uncertainty** — bootstrap or robust/clustered SEs; a causal estimate
+- **Estimate uncertainty** — [bootstrap](02-statistics-that-matter.md) or robust/clustered SEs; a causal estimate
   without an interval is not a result.
 - **Do a sensitivity analysis** — how strong would an unmeasured confounder have to
   be to overturn your conclusion? (E-values, Rosenbaum bounds.)
@@ -155,6 +155,6 @@ print(f"\nConclusion: peeking nearly doubles the false-positive rate.")
 ## Cross-references
 
 - [P3](../projects/p3_causal_inference) — doubly-robust ATE estimation with planted truth
-- [17](17-experimentation-advanced.md) — CUPED, sequential testing, bandits
+- [17](17-experimentation-advanced.md) — [CUPED](17-experimentation-advanced.md), [sequential testing](17-experimentation-advanced.md), bandits
 - [30](30-product-analytics.md) — experimentation in product analytics
 - [35](35-martech.md) — uplift modelling (who responds to treatment?)

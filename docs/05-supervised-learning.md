@@ -27,17 +27,17 @@ Regularisation trades a little bias for a lot less variance by penalising model
 complexity. **L2 (Ridge)** shrinks coefficients smoothly; **L1 (Lasso)** drives
 some to exactly zero (feature selection); **ElasticNet** blends both. In trees,
 "regularisation" is `max_depth`, `min_samples_leaf`, `learning_rate`, and
-subsampling. Tune the strength by cross-validation — never by test-set score.
+subsampling. Tune the strength by [cross-validation](04-evaluation-and-validation.md) — never by test-set score.
 
 ## Class imbalance
 
 Common in fraud, churn, disease. Options, roughly in order of preference:
 
-1. **Do nothing to the data; fix the metric and threshold** (PR-AUC, cost-based
+1. **Do nothing to the data; fix the metric and threshold** ([PR-AUC](04-evaluation-and-validation.md), cost-based
    threshold). Often sufficient.
 2. **Class weights** (`class_weight="balanced"`) — cheap and effective.
 3. **Resampling** (SMOTE oversampling, or undersampling) — can help, but SMOTE
-   must be applied *inside* the CV fold, never before splitting (leakage).
+   must be applied *inside* the CV fold, never before splitting ([leakage](03-data-and-feature-engineering.md)).
 
 ## Interpretation you can defend
 
@@ -53,7 +53,7 @@ Common in fraud, churn, disease. Options, roughly in order of preference:
 
 Baseline → Pipeline (no leakage) → cross-validated comparison of 2–3 families →
 pick by the *business-relevant* metric → refit on all training data → **single**
-held-out test → calibrate if probabilities matter → explain → document the
+held-out test → [calibrate](04-evaluation-and-validation.md) if probabilities matter → explain → document the
 assumptions. That is exactly the arc of P1.
 
 ---
