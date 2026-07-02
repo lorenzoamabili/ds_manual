@@ -2,7 +2,7 @@
 
 A structured, opinionated reference for how data science is actually practised — methods, models, best practices, pitfalls — backed by **runnable, verified Python on real open data**.
 
-[![Launch on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/main?urlpath=lab)
+[![Launch on Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/lorenzoamabili/ds_manual/HEAD?urlpath=lab)
 
 → Start with the **[Map of Data Science](00-map-of-data-science.md)** for an overview of how functions and domains connect.
 
