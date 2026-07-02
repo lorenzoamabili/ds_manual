@@ -79,6 +79,10 @@ nav:
     - 20 · Bayesian & Probabilistic: 20-bayesian-and-probabilistic.md
     - 21 · Graph & Network Analysis: 21-graph-and-network-analysis.md
     - 22 · Geospatial: 22-geospatial.md
+    - 23 · Reinforcement Learning & Bandits: 23-reinforcement-learning.md
+    - 24 · Vector Databases & RAG: 24-vector-databases-rag.md
+    - 25 · AutoML & Hyperparameter Tuning: 25-automl-hyperparameter-tuning.md
+    - 26 · Synthetic Data: 26-synthetic-data.md
   - Production & Responsibility:
     - 14 · MLOps & Productionisation: 14-mlops-and-productionization.md
     - 15 · Communication & Visualisation: 15-communication-and-visualization.md

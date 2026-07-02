@@ -28,6 +28,8 @@ projects: ## Run all projects (writes metrics + figures)
 	cd projects/p8_recommender             && $(PY) recommend.py
 	cd projects/p9_nlp_classification      && $(PY) classify.py
 	cd projects/p10_optimization           && $(PY) optimize.py
+	cd projects/p11_bandit                 && $(PY) bandit.py
+	cd projects/p12_rag                    && $(PY) rag.py
 
 case-study: ## Run the end-to-end churn + uplift case study
 	cd case_study_churn_uplift && $(PY) run.py
@@ -49,7 +51,9 @@ notebooks: ## Execute all Jupyter notebooks top-to-bottom (requires jupyter)
 	    notebooks/02-model-evaluation.ipynb \
 	    notebooks/03-ab-testing.ipynb \
 	    notebooks/04-nlp-text-classification.ipynb \
-	    notebooks/05-feature-engineering.ipynb
+	    notebooks/05-feature-engineering.ipynb \
+	    projects/p11_bandit/notebook.ipynb \
+	    projects/p12_rag/notebook.ipynb
 
 reproduce: lint test projects case-study ## Full pipeline: lint -> test -> all projects
 	@echo "All checks passed and every result reproduced from source."

@@ -30,6 +30,8 @@ and executable code cells. Open in Jupyter Lab or VS Code.
 | P8 · Recommender System | MovieLens SVD, coverage vs RMSE | `projects/p8_recommender/notebook.ipynb` |
 | P9 · NLP Classification | TF-IDF + LinearSVC on 20 Newsgroups | `projects/p9_nlp_classification/notebook.ipynb` |
 | P10 · Optimisation | LP budget allocation, MILP knapsack, Hungarian staffing | `projects/p10_optimization/notebook.ipynb` |
+| P11 · Multi-Armed Bandits | Epsilon-greedy vs UCB1 vs Thompson sampling, LinUCB | `projects/p11_bandit/notebook.ipynb` |
+| P12 · RAG Pipeline | Chunking, TF-IDF retrieval, Recall@K, MRR evaluation | `projects/p12_rag/notebook.ipynb` |
 
 **Case study:**
 

@@ -225,6 +225,43 @@ splitting — pure prediction without optimisation leaves money on the table.
 """,
         "script": "optimize.py",
     },
+    "p11_bandit": {
+        "title": "P11 · Multi-Armed Bandits — Epsilon-Greedy vs UCB1 vs Thompson Sampling",
+        "lesson": """
+## Real lesson: Thompson sampling dominates; bandits are the right tool for online decisions
+
+When you must allocate a budget across uncertain options and learn as you go,
+standard A/B testing is wasteful — it allocates equally to all arms regardless
+of what's being observed. Bandits adaptively shift budget to better-performing
+arms.
+
+This notebook compares three strategies on 5 marketing message variants and
+extends to contextual bandits (LinUCB), where arm selection is conditioned on
+user features.
+
+**The punchline:** Thompson sampling achieves the lowest regret because its
+Bayesian Beta-Binomial model naturally balances exploration (uncertain arms)
+and exploitation (known good arms).
+""",
+        "script": "bandit.py",
+    },
+    "p12_rag": {
+        "title": "P12 · Retrieval-Augmented Generation (RAG) — Building a Knowledge Retriever",
+        "lesson": """
+## Real lesson: retrieval quality is the ceiling — evaluate it first
+
+A RAG system is only as good as its retriever. If the retriever doesn't surface
+the relevant context, the LLM cannot generate a correct answer regardless of its
+capability. This notebook builds a complete retrieval pipeline, evaluates it with
+Recall@K and MRR, and demonstrates why hybrid (sparse + dense) retrieval
+outperforms either alone.
+
+**The punchline:** Recall@3 = 100% with TF-IDF on this well-structured knowledge
+base. In production with noisier documents, dense embedding retrieval with
+cross-encoder reranking closes the gap.
+""",
+        "script": "rag.py",
+    },
 }
 
 CASE_STUDY = {
