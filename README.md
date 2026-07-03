@@ -129,6 +129,8 @@ practice beginners get wrong*.
 | P8 | Recommender system | RMSE hides popularity bias; evaluate coverage + precision@K | MovieLens 100K |
 | P9 | NLP classification | TF-IDF + logistic regression beats Naive Bayes; beat the linear baseline first | 20 Newsgroups (4 categories) |
 | P10 | Optimisation | Predictions → actions under constraints; LP/MILP/assignment | Synthetic (scipy/PuLP) |
+| P11 | Multi-armed bandits | Thompson sampling beats epsilon-greedy; contextual LinUCB | Synthetic (seeded, 5-arm) |
+| P12 | RAG pipeline | Retrieval quality bounds answer quality; evaluate Recall@K first | Synthetic knowledge base |
 | — | **Case study** | Target uplift, not risk; model → decision → £ | Simulated pilot RCT |
 
 ---
@@ -139,7 +141,7 @@ pipelines — so the repo is built that way:
 
 - [`src/dsmanual/`](src/dsmanual) — small, **tested** utilities (forecasting metrics,
   standardised mean difference, propensity clipping) imported by P2/P3.
-- [`tests/`](tests) — 15 tests including a shuffled-label leakage guard.
+- [`tests/`](tests) — 26 tests including a shuffled-label leakage guard.
 - [`cards/`](cards) — model & data cards for the flagship models, with templates.
 - `Makefile`, `.github/workflows/ci.yml`, `.devcontainer/` — one-command repro, CI,
   reproducible dev environment.
